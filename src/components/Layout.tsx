@@ -1,18 +1,13 @@
 import type { ReactNode } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { Frame, TitleBar, Button } from "@react95/core";
-import { User, Computer } from "@react95/icons";
 import { Marquee } from "./Marquee";
 import { Sparkles } from "./Sparkles";
+import { Control } from "./WinCard";
 import { NAV, SITE, COPYRIGHT_YEAR, MARQUEE_ITEMS } from "@/config/site";
 
 interface LayoutProps {
   children: ReactNode;
 }
-
-const isActive = (to: string) =>
-  ({ isActive }: { isActive: boolean }) =>
-    isActive;
 
 export function Layout({ children }: LayoutProps) {
   return (
@@ -35,19 +30,23 @@ export function Layout({ children }: LayoutProps) {
 
       {/* ── nav header as a Win95 window ── */}
       <header className="relative z-10 px-4 pt-4 sm:px-6">
-        <Frame boxShadow="out" className="mx-auto max-w-5xl bg-blush/80 backdrop-blur-md">
-          <TitleBar title={`${SITE.name}.exe - ${SITE.tagline}`} icon={<Computer />} className="items-center py-0.5">
-            <TitleBar.OptionsBox className="ml-auto self-center">
-              <TitleBar.Minimize />
-              <TitleBar.Maximize />
-              <TitleBar.Close />
-            </TitleBar.OptionsBox>
-          </TitleBar>
+        <div className="win-outset mx-auto max-w-5xl rounded-[2px] bg-blush/80 backdrop-blur-md">
+          <div className="win-titlebar font-pixel text-sm tracking-wide py-0.5">
+            <span className="text-base leading-none">🖥</span>
+            <span className="truncate">
+              {SITE.name}.exe - {SITE.tagline}
+            </span>
+            <span className="ml-auto flex shrink-0 gap-1">
+              <Control glyph="–" label="Minimize" />
+              <Control glyph="□" label="Maximize" />
+              <Control glyph="✕" label="Close" />
+            </span>
+          </div>
 
           <nav className="flex flex-wrap items-center gap-1 px-3 py-3 sm:px-4">
             <Link
               to="/"
-              className="mr-2 font-pixel text-2xl text-rose-deep pixel-shadow hover:animate-wiggle inline-block"
+              className="mr-2 inline-block font-pixel text-2xl text-rose-deep pixel-shadow hover:animate-wiggle"
               aria-label={`${SITE.name} home`}
             >
               {SITE.name}
@@ -57,22 +56,23 @@ export function Layout({ children }: LayoutProps) {
             </span>
             <div className="ml-auto flex flex-wrap gap-1">
               {NAV.map((nav) => (
-                <NavLink key={nav.to} to={nav.to} end={nav.to === "/"} className={isActive(nav.to)}>
+                <NavLink key={nav.to} to={nav.to} end={nav.to === "/"}>
                   {({ isActive }) => (
-                    <Button
-                      className={`px-3 py-1 font-kawaii text-sm ${
-                        isActive ? "text-flamingo-deep font-bold" : "text-plum"
+                    <button
+                      type="button"
+                      className={`win-button text-sm ${
+                        isActive ? "font-bold text-flamingo-deep" : "text-plum"
                       }`}
                     >
                       {isActive ? "★ " : ""}
                       {nav.label}
-                    </Button>
+                    </button>
                   )}
                 </NavLink>
               ))}
             </div>
           </nav>
-        </Frame>
+        </div>
       </header>
 
       {/* main content */}
@@ -82,7 +82,7 @@ export function Layout({ children }: LayoutProps) {
 
       {/* ── footer ── */}
       <footer className="relative z-10 px-4 pb-8 sm:px-6">
-        <Frame boxShadow="out" className="mx-auto max-w-5xl bg-blush/80">
+        <div className="win-outset mx-auto max-w-5xl rounded-[2px] bg-blush/80">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <p className="font-pixel text-sm text-plum">
               © {COPYRIGHT_YEAR} {SITE.name} — made with ♡ &amp; too much CHU²
@@ -93,7 +93,7 @@ export function Layout({ children }: LayoutProps) {
                   {({ isActive }) => (
                     <span
                       className={`hover:text-flamingo ${
-                        isActive ? "text-flamingo-deep font-bold" : "text-plum-muted"
+                        isActive ? "font-bold text-flamingo-deep" : "text-plum-muted"
                       }`}
                     >
                       {nav.label}
@@ -105,14 +105,14 @@ export function Layout({ children }: LayoutProps) {
           </div>
           <div className="flex items-center justify-center gap-4 border-t-2 border-blush py-2">
             <span className="animate-bob text-salmon">✦</span>
-            <span className="font-gothic text-xs text-plum-muted inline-block">
+            <span className="inline-block font-gothic text-xs text-plum-muted">
               もえもえ きゅん きゅん ☆
             </span>
             <span className="animate-bob text-flamingo">✦</span>
           </div>
-        </Frame>
+        </div>
         <p className="mt-3 text-center font-kawaii text-xs text-plum-muted">
-          <User className="mr-1 inline-block" width={12} height={12} /> blessed by Hatsune Pinku
+          <span className="mr-1">👾</span> blessed by Hatsune Pinku
         </p>
       </footer>
     </div>
