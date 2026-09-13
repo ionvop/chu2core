@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Character } from "./Character";
+import chu2Assistant from "@/assets/chu2-assistant.webp";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -108,7 +108,12 @@ export function Chat() {
       >
         {messages.length === 0 && !loading ? (
           <div className="flex items-center gap-3">
-            <Character variant="live" float={false} className="w-14 shrink-0" />
+            <img
+              src={chu2Assistant}
+              alt="CHU² contact assistant"
+              loading="lazy"
+              className="w-14 shrink-0 select-none"
+            />
             <p className="font-kawaii text-sm leading-relaxed text-plum">
               hi hi! ♡ I'm CHU² — ionvop's lil contact assistant. ask me anything,
               or just say hi! ✧
@@ -124,9 +129,10 @@ export function Chat() {
                 }`}
               >
                 {msg.role === "assistant" && (
-                  <Character
-                    variant="live"
-                    float={false}
+                  <img
+                    src={chu2Assistant}
+                    alt="CHU² contact assistant"
+                    loading="lazy"
                     className="w-10 shrink-0 select-none"
                   />
                 )}
@@ -147,9 +153,10 @@ export function Chat() {
         {/* ── typing indicator ── */}
         {loading && (
           <div className="mt-3 flex items-center gap-2">
-            <Character
-              variant="live"
-              float={false}
+            <img
+              src={chu2Assistant}
+              alt="CHU² contact assistant"
+              loading="lazy"
               className="w-10 shrink-0 select-none"
             />
             <span className="animate-bob text-2xl leading-none" aria-label="CHU² is typing">
