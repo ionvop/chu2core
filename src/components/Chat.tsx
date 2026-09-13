@@ -22,6 +22,7 @@ export function Chat() {
     localStorage.getItem(STORAGE_KEY)
   );
   const [error, setError] = useState<string | null>(null);
+  const [confirmingNew, setConfirmingNew] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +60,24 @@ export function Chat() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
+  /**
+   * Starts a brand-new conversation. The API creates a fresh session whenever
+   * `key` is omitted on send, so we only need to clear local state + the stored
+   * key here — the next message will begin a new session server-side.
+   */
+  function startNewConversation() {
+    if (loading) return;
+    if (!confirmingNew) {
+      setConfirmingNew(true);
+      return;
+    }
+    setMessages([]);
+    setSessionKey(null);
+    setError(null);
+    setConfirmingNew(false);
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
   async function send() {
     const content = input.trim();
     if (content === "" || loading) return;
@@ -67,6 +86,7 @@ export function Chat() {
     setInput("");
     setLoading(true);
     setError(null);
+    setConfirmingNew(false);
 
     try {
       const res = await fetch(API_BASE, {
@@ -100,6 +120,19 @@ export function Chat() {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* ── new conversation ── */}
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={startNewConversation}
+          disabled={loading}
+          className="win-button font-kawaii text-xs font-bold"
+          aria-label="Start a new conversation"
+        >
+          {confirmingNew ? "sure? ♡" : "✦ new conversation"}
+        </button>
+      </div>
+
       {/* ── message log ── */}
       <div
         ref={scrollRef}
