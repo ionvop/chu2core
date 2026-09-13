@@ -21,6 +21,8 @@ This API is designed to run on **InfinityFree**, which imposes two hard limits t
 
 > **Method tunneling:** For any non-GET operation, send a `POST` request with a JSON body that includes `"_method": "PUT"` (or `"DELETE"`). The server dispatches on that value.
 
+> **Message indexing:** When editing or deleting messages, each message is addressed by a zero-based `index` relative to the full session history as returned by `GET /api/chat`. `index` `0` is the **first (oldest)** message and `messages.length - 1` is the **latest**. The index is resolved against the current history each request, so it may shift after other edits or deletions.
+
 ---
 
 ## Endpoints
@@ -123,15 +125,90 @@ Sends a user message to the model and returns the assistant's reply. If `key` is
 
 ---
 
-### `POST /api/chat` with `_method: "PUT"` — (Reserved)
+### `POST /api/chat` with `_method: "PUT"` — Edit a message
 
-Reserved for future use. Currently returns an empty response.
+Edits the content of an existing message, addressed by its zero-based index in the session history.
+
+**Request body** (`application/json`)
+
+| Field     | Type   | Required | Description                                                                 |
+|-----------|--------|----------|-----------------------------------------------------------------------------|
+| `_method` | string | Yes      | Must be `"PUT"`.                                                            |
+| `key`     | string | Yes      | The session key containing the message.                                     |
+| `index`   | int    | Yes      | Zero-based message index. `0` = first (oldest) message.                     |
+| `content` | string | Yes      | The new message text.                                                       |
+
+**Example**
+
+```json
+{
+  "_method": "PUT",
+  "key": "session_abc123",
+  "index": 1,
+  "content": "Edited question."
+}
+```
+
+**Responses**
+
+`200 OK` — Message updated. Returns the updated full history.
+
+```json
+{
+  "key": "session_abc123",
+  "messages": [
+    { "role": "user", "content": "Hello" },
+    { "role": "user", "content": "Edited question." }
+  ]
+}
+```
+
+| Status | Condition                                             |
+|--------|-------------------------------------------------------|
+| `400`  | `key`, `index` or `content` is missing or invalid.    |
+| `404`  | Session not found, or `index` is out of range.        |
 
 ---
 
-### `POST /api/chat` with `_method: "DELETE"` — (Reserved)
+### `POST /api/chat` with `_method: "DELETE"` — Delete a message
 
-Reserved for future use. Currently returns an empty response.
+Deletes an existing message from a session, addressed by its zero-based index in the session history.
+
+**Request body** (`application/json`)
+
+| Field     | Type   | Required | Description                                                                 |
+|-----------|--------|----------|-----------------------------------------------------------------------------|
+| `_method` | string | Yes      | Must be `"DELETE"`.                                                         |
+| `key`     | string | Yes      | The session key containing the message.                                     |
+| `index`   | int    | Yes      | Zero-based message index. `0` = first (oldest) message.                     |
+
+**Example**
+
+```json
+{
+  "_method": "DELETE",
+  "key": "session_abc123",
+  "index": 1
+}
+```
+
+**Responses**
+
+`200 OK` — Message deleted. Returns the updated full history.
+
+```json
+{
+  "key": "session_abc123",
+  "messages": [
+    { "role": "user", "content": "Hello" }
+  ]
+}
+```
+
+| Status | Condition                                             |
+|--------|-------------------------------------------------------|
+| `400`  | `key` or `index` is missing or invalid.               |
+| `404`  | Session not found, or `index` is out of range.        |
 
 ---
 
