@@ -2,8 +2,8 @@ import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
 import { Character } from "@/components/Character";
 import { WinCard, Control } from "@/components/WinCard";
-import avatar from "@/assets/avatar.png";
-import banner from "@/assets/banner.png";
+import avatar from "@/assets/avatar.webp";
+import banner from "@/assets/banner.webp";
 import {
   SITE,
   MARQUEE_ITEMS,
