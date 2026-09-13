@@ -77,6 +77,29 @@ function insertMessage(int $sessionId, string $role, string $content) {
 }
 
 /**
+ * Loads the message row ids for a session, oldest first. Used to map a
+ * zero-based message index (index 0 = first/oldest message) to its
+ * `messages.id` so messages can be edited or deleted by index.
+ *
+ * @param int $sessionId The session id.
+ * @return array An array of associative arrays with 'id' and 'role'.
+ */
+function loadMessageIds(int $sessionId): array {
+    global $db;
+    $result = executePreparedQuery(
+        $db,
+        "SELECT `id`, `role` FROM `messages` WHERE `session_id` = :session_id ORDER BY `id` ASC",
+        [":session_id" => $sessionId]
+    );
+
+    $ids = [];
+    while ($row = $result->fetchArray()) {
+        $ids[] = ["id" => (int) $row["id"], "role" => $row["role"]];
+    }
+    return $ids;
+}
+
+/**
  * Loads the full message history for a session, oldest first.
  *
  * @param int $sessionId The session id.
@@ -199,10 +222,90 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 echo json_encode(["key" => $key, "message" => $answer["content"]]);
                 exit;
             case "PUT":
-                //
+                // POST /chat with _method "PUT" and body
+                // { "key": ?, "index": N, "content": "..." } -> edits the
+                // message at zero-based index N (0 = first/oldest message).
+                $key = $data["key"] ?? null;
+                $index = $data["index"] ?? null;
+                $content = $data["content"] ?? null;
+
+                if ($key == null || $key == "") {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Missing 'key' field."]);
+                    exit;
+                }
+                if (!is_int($index) || $index < 0) {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Missing or invalid 'index' field."]);
+                    exit;
+                }
+                if ($content == null || trim($content) == "") {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Missing 'content' field."]);
+                    exit;
+                }
+
+                $sessionId = findSessionId($key);
+                if ($sessionId == false) {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Session not found."]);
+                    exit;
+                }
+
+                $messageIds = loadMessageIds($sessionId);
+                if ($index >= count($messageIds)) {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Message not found."]);
+                    exit;
+                }
+
+                executePreparedQuery(
+                    $db,
+                    "UPDATE `messages` SET `content` = :content WHERE `id` = :id",
+                    [":content" => $content, ":id" => $messageIds[$index]["id"]]
+                );
+
+                echo json_encode(["key" => $key, "messages" => loadHistory($sessionId)]);
                 exit;
             case "DELETE":
-                //
+                // POST /chat with _method "DELETE" and body
+                // { "key": ?, "index": N } -> deletes the message at
+                // zero-based index N (0 = first/oldest message).
+                $key = $data["key"] ?? null;
+                $index = $data["index"] ?? null;
+
+                if ($key == null || $key == "") {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Missing 'key' field."]);
+                    exit;
+                }
+                if (!is_int($index) || $index < 0) {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Missing or invalid 'index' field."]);
+                    exit;
+                }
+
+                $sessionId = findSessionId($key);
+                if ($sessionId == false) {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Session not found."]);
+                    exit;
+                }
+
+                $messageIds = loadMessageIds($sessionId);
+                if ($index >= count($messageIds)) {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Message not found."]);
+                    exit;
+                }
+
+                executePreparedQuery(
+                    $db,
+                    "DELETE FROM `messages` WHERE `id` = :id",
+                    [":id" => $messageIds[$index]["id"]]
+                );
+
+                echo json_encode(["key" => $key, "messages" => loadHistory($sessionId)]);
                 exit;
             default:
                 http_response_code(422);
