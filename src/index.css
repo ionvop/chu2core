@@ -35,7 +35,6 @@
   --animate-bob: bob 2.2s ease-in-out infinite;
   --animate-scan: scan 8s linear infinite;
   --animate-pop: pop 0.35s ease-out;
-  --animate-stamp-shower: stamp-shower 3.2s ease-in-out forwards;
 
   @keyframes marquee {
     0% { transform: translateX(0); }
@@ -64,21 +63,6 @@
   @keyframes pop {
     0% { transform: scale(0.85) rotate(-4deg); opacity: 0; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  /* a stamp falls from above the viewport, bounces a few times on the
-     bottom edge (translateY 0), then fades out. Rotation is randomized via
-     the --stamp-rot custom property. */
-  @keyframes stamp-shower {
-    0% { transform: translateY(-110vh) rotate(var(--stamp-rot, 0deg)); opacity: 0; }
-    6% { opacity: 1; }
-    28% { transform: translateY(0) rotate(var(--stamp-rot, 0deg)); }
-    40% { transform: translateY(-32vh) rotate(var(--stamp-rot, 0deg)); }
-    52% { transform: translateY(0) rotate(var(--stamp-rot, 0deg)); }
-    62% { transform: translateY(-16vh) rotate(var(--stamp-rot, 0deg)); }
-    72% { transform: translateY(0) rotate(var(--stamp-rot, 0deg)); }
-    80% { transform: translateY(-7vh) rotate(var(--stamp-rot, 0deg)); }
-    88% { transform: translateY(0) rotate(var(--stamp-rot, 0deg)); }
-    100% { transform: translateY(0) rotate(var(--stamp-rot, 0deg)); opacity: 0; }
   }
 }
 
