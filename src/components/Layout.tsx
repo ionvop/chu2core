@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Marquee } from "./Marquee";
 import { Sparkles } from "./Sparkles";
+import { StampShower } from "./StampShower";
 import { Control } from "./WinCard";
 import { NAV, SITE, COPYRIGHT_YEAR, MARQUEE_ITEMS } from "@/config/site";
 
@@ -15,6 +16,7 @@ export function Layout({ children }: LayoutProps) {
       {/* background texture */}
       <div className="bg-sparkle-grid pointer-events-none absolute inset-0 opacity-60" aria-hidden />
       <Sparkles count={14} />
+      <StampShower />
 
       {/* marquee ribbon topper */}
       <Marquee
