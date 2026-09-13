@@ -11,4 +11,19 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Separate React (large + rarely changes) from app code for caching.
+        manualChunks(id) {
+          if (
+            id.includes("node_modules") &&
+            (id.includes("/react/") || id.includes("/react-dom/") || id.includes("/scheduler/"))
+          ) {
+            return "react-vendor";
+          }
+        },
+      },
+    },
+  },
 });
