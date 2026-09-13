@@ -1,5 +1,3 @@
-import { Frame, Button, Input } from "@react95/core";
-import { MsDos, Joy102, Mshearts1, Computer } from "@react95/icons";
 import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
 import { Character } from "@/components/Character";
@@ -13,10 +11,11 @@ import {
 
 type Glyph = "code" | "game" | "heart";
 
+// emoji stand-ins for the classic Win95 icon vibe (tiny + no runtime cost)
 const cardIconMap: Record<Glyph, React.ReactNode> = {
-  code: <MsDos className="inline-block" width={28} height={28} />,
-  game: <Joy102 className="inline-block" width={28} height={28} />,
-  heart: <Mshearts1 className="inline-block" width={28} height={28} />,
+  code: <span className="text-lg leading-none">💾</span>,
+  game: <span className="text-lg leading-none">🕹</span>,
+  heart: <span className="text-lg leading-none">💗</span>,
 };
 
 export function Home() {
@@ -38,20 +37,20 @@ export function Home() {
           <Character variant="casual" className="w-28 sm:w-36" />
           <div className="flex flex-col items-center gap-3">
             <Stamps count={5} width={64} />
-            <Frame boxShadow="out" className="bg-white/90">
+            <div className="win-outset rounded-[2px] bg-white/90">
               <div className="flex flex-wrap items-center gap-2 px-3 py-2">
-                <Computer width={22} height={22} className="text-rose" />
-                <Input
+                <span className="text-lg leading-none">💬</span>
+                <input
+                  type="text"
                   placeholder="send me a message!"
-                  className="font-kawaii text-sm"
-                  defaultValue=""
+                  className="win-input min-w-0 flex-1 text-sm"
                   aria-label="Send a message"
                 />
-                <Button className="px-3 py-1 font-kawaii text-sm font-bold">
+                <button type="button" className="win-button font-kawaii text-sm font-bold">
                   ✉ send
-                </Button>
+                </button>
               </div>
-            </Frame>
+            </div>
           </div>
           <Character variant="live" className="w-28 sm:w-36" />
         </div>
