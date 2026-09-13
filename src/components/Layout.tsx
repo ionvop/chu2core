@@ -106,13 +106,13 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex items-center justify-center gap-4 border-t-2 border-blush py-2">
             <span className="animate-bob text-salmon">✦</span>
             <span className="inline-block font-gothic text-xs text-plum-muted">
-              もえもえ きゅん きゅん ☆
+              チュチュ は きょう も かわいい ☆
             </span>
             <span className="animate-bob text-flamingo">✦</span>
           </div>
         </div>
         <p className="mt-3 text-center font-kawaii text-xs text-plum-muted">
-          <span className="mr-1">👾</span> blessed by Hatsune Pinku
+          <span className="mr-1">💗</span> blessed by CHU²
         </p>
       </footer>
     </div>
