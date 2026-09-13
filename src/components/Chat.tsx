@@ -145,7 +145,7 @@ export function Chat() {
               src={chu2Assistant}
               alt="CHU² contact assistant"
               loading="lazy"
-              className="w-14 shrink-0 select-none"
+              className="w-20 shrink-0 select-none"
             />
             <p className="font-kawaii text-sm leading-relaxed text-plum">
               hi hi! ♡ I'm CHU² — ionvop's lil contact assistant. ask me anything,
