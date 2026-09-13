@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/*
+ * ─── Animecore / Webcore theme ─────────────────────────────
+ * Palette: pastel pink, orange red, dusty rose, salmon, cream.
+ */
+@theme {
+  /* colors */
+  --color-pastel: #ffd9e8;
+  --color-blush: #ffc2d6;
+  --color-pink: #ff9ec4;
+  --color-flamingo: #ff5a4e;
+  --color-flamingo-deep: #e64842;
+  --color-rose: #d45d79;
+  --color-rose-deep: #c0506e;
+  --color-salmon: #fa8072;
+  --color-salmon-light: #ffa195;
+  --color-cream: #fff5f0;
+  --color-cream-deep: #ffe3d6;
+  --color-plum: #4b3a4a;
+  --color-plum-muted: #8a6a7a;
+
+  /* fonts */
+  --font-pixel: "Pixelify Sans", sans-serif;
+  --font-gothic: "DotGothic16", sans-serif;
+  --font-kawaii: "Baloo 2", sans-serif;
+  --font-body: "Comic Neue", sans-serif;
+
+  /* animations */
+  --animate-marquee: marquee 22s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-wiggle: wiggle 0.6s ease-in-out infinite;
+  --animate-sparkle: sparkle 2.4s ease-in-out infinite;
+  --animate-bob: bob 2.2s ease-in-out infinite;
+  --animate-scan: scan 8s linear infinite;
+  --animate-pop: pop 0.35s ease-out;
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--float-rot, 0deg)); }
+    50% { transform: translateY(-14px) rotate(var(--float-rot, 0deg)); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg) scale(1); }
+    50% { transform: rotate(3deg) scale(1.06); }
+  }
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.6) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 12px; }
+  }
+  @keyframes pop {
+    0% { transform: scale(0.85) rotate(-4deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+}
+
+/*
+ * Re-theme React95 (Win95) to a soft pastel look so the windows
+ * feel like animecore instead of grey Win95. Kept the classic
+ * beveled borders, just recolored.
+ */
+:root {
+  --r95-color-anchor: #c0506e;
+  --r95-color-anchorVisited: #a0435f;
+  --r95-color-borderDark: #cbb4bf;
+  --r95-color-borderDarkest: #9a7a8a;
+  --r95-color-borderLight: #ffd9e8;
+  --r95-color-borderLighter: #ffeaf2;
+  --r95-color-borderLightest: #ffffff;
+  --r95-color-canvas: #4b3a4a;
+  --r95-color-canvasText: #fff5f0;
+  --r95-color-headerBackground: #ff9ec4;
+  --r95-color-headerNotActiveBackground: #e7c9d6;
+  --r95-color-headerNotActiveText: #ffffff;
+  --r95-color-headerText: #ffffff;
+  --r95-color-material: #ffcddd;
+  --r95-color-materialText: #4b3a4a;
+  --r95-color-materialTextDisabled: #c8aeb9;
+  --r95-color-materialTextDisabledShadow: #fff5f0;
+  --r95-color-materialTextInvert: #ffffff;
+  --r95-color-progress: #ff5a4e;
+  --r95-color-inputBackground: #fff5f0;
+  --r95-color-inputBackgroundDisabled: #ffe3d6;
+}
+
+/* ── base ─────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-plum);
+  background-color: var(--color-pastel);
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><circle cx='7' cy='7' r='6' fill='%23ff9ec4'/><circle cx='7' cy='7' r='3' fill='white'/></svg>") 7 7, auto;
+}
+
+/* react95's GlobalStyle sets its own font stack; nudge to our kawaii font */
+[class*="react95-"],
+.react95-TitleBar__Title {
+  font-family: var(--font-pixel);
+}
+
+::selection {
+  background: var(--color-flamingo);
+  color: #fff;
+}
+
+/* custom scrollbar to feel ~webcore~ */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-pink), var(--color-rose));
+  border-radius: 8px;
+  border: 3px solid var(--color-cream);
+}
+
+/* ── helper utilities ─────────────────────────────────── */
+.pixel-shadow {
+  text-shadow: 2px 2px 0 var(--color-flamingo-deep);
+}
+.soft-shadow {
+  box-shadow: 0 6px 20px rgba(212, 93, 121, 0.25);
+}
+.sticker-shadow {
+  filter: drop-shadow(0 4px 6px rgba(75, 58, 74, 0.25));
+}
+
+/* diagonal candy stripes used for marquee/scallop edges */
+.candy-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-flamingo) 0,
+    var(--color-flamingo) 12px,
+    var(--color-cream) 12px,
+    var(--color-cream) 24px
+  );
+}
+
+.bg-sparkle-grid {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.55) 2px, transparent 3px),
+    radial-gradient(circle at 75% 75%, rgba(255, 158, 196, 0.5) 2px, transparent 3px);
+  background-size: 60px 60px;
+}
+
+.scanlines-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 5px,
+    rgba(255, 255, 255, 0.06) 6px
+  );
+  animation: var(--animate-scan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

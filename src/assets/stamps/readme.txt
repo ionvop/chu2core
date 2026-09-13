@@ -1,0 +1,1 @@
+Images here are in-game stamps of CHU² good for ornament decorations to be plastered around the page. The text content of the stamp is used as the filename.

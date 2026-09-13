@@ -1,0 +1,1 @@
+Images here are full-body standing poses of CHU² good for foreground content of leftmost/rightmost vertical banners.
