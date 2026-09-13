@@ -1,33 +1,43 @@
 import type { ReactNode } from "react";
-import { Frame, TitleBar } from "@react95/core";
 
 interface WinCardProps {
   title: string;
   icon?: ReactNode;
   children: ReactNode;
   className?: string;
-  active?: boolean;
+  /** controls shown in the top-right corner */
+  controls?: ReactNode;
 }
 
 /**
- * A candy-pastel Windows-95-style window used as a content card. Uses React95's
- * Frame + TitleBar with the theme we recolored pink. Kept minimal per the plan.
+ * A candy-pastel Windows-95-style window used as a content card. Hand-rolled
+ * beveled look (no react95 runtime) so the aesthetic stays but the bundle
+ * stays small. Minimal per the plan — animecore leads, Win95 accents.
  */
 export function WinCard({
   title,
   icon,
   children,
   className = "",
-  active = true,
+  controls,
 }: WinCardProps) {
   return (
-    <Frame
-      className={`soft-shadow bg-blush/60 backdrop-blur-sm ${className}`}
-      boxShadow="out"
-      padding={3}
-    >
-      <TitleBar title={title} icon={icon} active={active} className="items-center" />
+    <div className={`win-outset rounded-[2px] bg-blush/70 backdrop-blur-sm ${className}`}>
+      <div className="win-titlebar font-pixel text-sm tracking-wide">
+        {icon && <span className="shrink-0">{icon}</span>}
+        <span className="truncate">{title}</span>
+        {controls && <span className="ml-auto flex shrink-0 gap-1">{controls}</span>}
+      </div>
       <div className="px-4 py-5">{children}</div>
-    </Frame>
+    </div>
+  );
+}
+
+/** Little Win95 title-bar control button. */
+export function Control({ glyph, label }: { glyph: string; label: string }) {
+  return (
+    <button type="button" className="win-control font-pixel" aria-label={label} title={label}>
+      {glyph}
+    </button>
   );
 }
