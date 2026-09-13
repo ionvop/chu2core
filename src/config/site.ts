@@ -118,6 +118,22 @@ export const CHARACTERS = {
   live: liveChar,
 };
 
+export const ABOUT_LAST_UPDATED = "2024-12-04";
+
+export const ABOUT_TITLES = [
+  "2024 ACM Programming Competition Champion",
+  "TETR.IO Season 1 U Rank Player",
+  "TETR.IO Season 2 U Rank Player",
+  "the plap guy",
+] as const;
+
+export const ABOUT_BIO = [
+  "I'm currently a 3rd year college student studying Bachelor of Science in Computer Science, and my interests include web development, software development, and game development.",
+  "The programming languages I'm familiar with are VBScript for automations, HTML, CSS, JavaScript, and PHP for web development, C# for GUI applications, Java for legacy applications and self-torture, Python for machine-learning, Brainf*ck for fun, Lua for game modding, GLSL for post-processing effects, Turbowarp (Scratch) for game development, and ivpy which is a custom programming language that I made for fun.",
+  "I like to play rhythm games and fast-paced Tetris games. My favorite rhythm games include osu!, mobile games such as Arcaea, Rotaeno, BanG Dream, and arcade rhythm games such as maimai, SDVX, and PIU. My favorite fast-paced Tetris games include TETR.IO and Jstris.",
+  "I'm also learning music production and my favorite genre to listen to is dubstep. My favorite artists include ReeK, Eliminate, and Similar Outskirts. I won't list down the JP artists because there's too many of them. The DAW software I used to use was Caustic 3 but I've since switched to Waveform 11.",
+] as const;
+
 export const STAMPS = [
   { src: stampBeGoodForSanta, alt: "be good for santa" },
   { src: stampExcellent, alt: "excellent!" },
