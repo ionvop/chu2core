@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Stamp } from "./Stamp";
-import { STAMPS } from "@/config/site";
+import { Gif } from "./Gif";
+import { STAMPS, GIFS } from "@/config/site";
 
 interface UnderConstructionProps {
   /** e.g. "about" */
@@ -13,7 +14,31 @@ interface UnderConstructionProps {
 export function UnderConstruction({ pageName }: UnderConstructionProps) {
   const stamp = STAMPS.find((s) => s.alt === "not to be underestimated");
   return (
-    <div className="flex flex-col items-center gap-6 py-16 text-center">
+    <div className="relative flex flex-col items-center gap-6 py-16 text-center">
+      <Gif
+        src={GIFS[0].src}
+        alt={GIFS[0].alt}
+        width={72}
+        className="pointer-events-none absolute -left-4 top-4 z-10 hidden animate-bob -rotate-6 sm:block"
+      />
+      <Gif
+        src={GIFS[1].src}
+        alt={GIFS[1].alt}
+        width={72}
+        className="pointer-events-none absolute -right-4 top-4 z-10 hidden animate-float-slow rotate-6 sm:block"
+      />
+      <Gif
+        src={GIFS[2].src}
+        alt={GIFS[2].alt}
+        width={64}
+        className="pointer-events-none absolute -bottom-4 left-2 z-10 hidden animate-bob -rotate-3 sm:block"
+      />
+      <Gif
+        src={GIFS[3].src}
+        alt={GIFS[3].alt}
+        width={64}
+        className="pointer-events-none absolute -bottom-4 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
+      />
       {stamp && (
         <Stamp
           src={stamp.src}
