@@ -14,7 +14,7 @@ type Glyph = "code" | "game" | "heart";
 // emoji stand-ins for the classic Win95 icon vibe (tiny + no runtime cost)
 const cardIconMap: Record<Glyph, React.ReactNode> = {
   code: <span className="text-lg leading-none">💾</span>,
-  game: <span className="text-lg leading-none">🕹</span>,
+  game: <span className="text-lg leading-none">🎮</span>,
   heart: <span className="text-lg leading-none">💗</span>,
 };
 
