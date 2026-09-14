@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { WinCard, Control } from "@/components/WinCard";
 
-const BOARD_API = "/api/board";
+// Relative so it resolves under the current subdirectory (e.g. /home/api/board).
+const BOARD_API = "api/board";
 
 /**
  * The global textboard, shown in its own Win95-style window.
