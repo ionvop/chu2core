@@ -7,7 +7,8 @@ interface ChatMessage {
   content: string;
 }
 
-const API_BASE = "/api/chat";
+// Relative so it resolves under the current subdirectory (e.g. /home/api/chat).
+const API_BASE = "api/chat";
 const STORAGE_KEY = "ionvop.chat.key";
 
 /**
