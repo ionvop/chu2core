@@ -16,16 +16,16 @@ import stampWhat from "@/assets/stamps/what.png";
 import stampWhenDidYou from "@/assets/stamps/when-did-you.png";
 import stampYouGame from "@/assets/stamps/you-game.png";
 
-import gif1 from "@/assets/gifs/chu2-1.webp";
-import gif2 from "@/assets/gifs/chu2-2.webp";
-import gif3 from "@/assets/gifs/chu2-3.webp";
-import gif4 from "@/assets/gifs/chu2-4.webp";
-import gif5 from "@/assets/gifs/chu2-5.webp";
-import gif6 from "@/assets/gifs/chu2-6.webp";
-import gif7 from "@/assets/gifs/chu2-7.webp";
-import gif8 from "@/assets/gifs/chu2-8.webp";
-import gif9 from "@/assets/gifs/chu2-9.webp";
-import gif10 from "@/assets/gifs/chu2-10.webp";
+import gif1 from "@/assets/gifs/chu2-1.gif";
+import gif2 from "@/assets/gifs/chu2-2.gif";
+import gif3 from "@/assets/gifs/chu2-3.gif";
+import gif4 from "@/assets/gifs/chu2-4.gif";
+import gif5 from "@/assets/gifs/chu2-5.gif";
+import gif6 from "@/assets/gifs/chu2-6.gif";
+import gif7 from "@/assets/gifs/chu2-7.gif";
+import gif8 from "@/assets/gifs/chu2-8.gif";
+import gif9 from "@/assets/gifs/chu2-9.gif";
+import gif10 from "@/assets/gifs/chu2-10.gif";
 
 export const SITE = {
   name: "ionvop",
