@@ -19,25 +19,29 @@ export function UnderConstruction({ pageName }: UnderConstructionProps) {
         src={GIFS[0].src}
         alt={GIFS[0].alt}
         width={96}
-        className="pointer-events-none absolute -left-4 top-4 z-10 hidden animate-bob -rotate-6 sm:block"
+        draggable
+        className="absolute -left-4 top-4 z-10 hidden animate-bob -rotate-6 sm:block"
       />
       <Gif
         src={GIFS[1].src}
         alt={GIFS[1].alt}
         width={96}
-        className="pointer-events-none absolute -right-4 top-4 z-10 hidden animate-float-slow rotate-6 sm:block"
+        draggable
+        className="absolute -right-4 top-4 z-10 hidden animate-float-slow rotate-6 sm:block"
       />
       <Gif
         src={GIFS[2].src}
         alt={GIFS[2].alt}
         width={88}
-        className="pointer-events-none absolute -bottom-4 left-2 z-10 hidden animate-bob -rotate-3 sm:block"
+        draggable
+        className="absolute -bottom-4 left-2 z-10 hidden animate-bob -rotate-3 sm:block"
       />
       <Gif
         src={GIFS[3].src}
         alt={GIFS[3].alt}
         width={88}
-        className="pointer-events-none absolute -bottom-4 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
+        draggable
+        className="absolute -bottom-4 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
       />
       {stamp && (
         <Stamp
