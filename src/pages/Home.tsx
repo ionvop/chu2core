@@ -1,6 +1,7 @@
 import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
 import { Gif } from "@/components/Gif";
+import { Gifs } from "@/components/Gifs";
 import { Character } from "@/components/Character";
 import { WinCard } from "@/components/WinCard";
 import {
@@ -150,6 +151,17 @@ export function Home() {
           className="pointer-events-none absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
         />
         <Stamps count={4} width={72} className="-rotate-1" />
+      </section>
+
+      {/* ── draggable sticker wall ── */}
+      <section className="relative flex flex-col items-center gap-4">
+        <h2 className="text-center font-pixel text-3xl text-rose-deep pixel-shadow">
+          drag me around! ✧
+        </h2>
+        <p className="font-kawaii text-lg text-plum-muted">
+          grab a sticker and fling it anywhere on the page ♡
+        </p>
+        <Gifs count={6} width={88} />
       </section>
     </div>
   );
