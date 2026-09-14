@@ -16,6 +16,17 @@ import stampWhat from "@/assets/stamps/what.png";
 import stampWhenDidYou from "@/assets/stamps/when-did-you.png";
 import stampYouGame from "@/assets/stamps/you-game.png";
 
+import gif1 from "@/assets/gifs/chu2-1.webp";
+import gif2 from "@/assets/gifs/chu2-2.webp";
+import gif3 from "@/assets/gifs/chu2-3.webp";
+import gif4 from "@/assets/gifs/chu2-4.webp";
+import gif5 from "@/assets/gifs/chu2-5.webp";
+import gif6 from "@/assets/gifs/chu2-6.webp";
+import gif7 from "@/assets/gifs/chu2-7.webp";
+import gif8 from "@/assets/gifs/chu2-8.webp";
+import gif9 from "@/assets/gifs/chu2-9.webp";
+import gif10 from "@/assets/gifs/chu2-10.webp";
+
 export const SITE = {
   name: "ionvop",
   tagline: "my little corner of the web",
@@ -146,6 +157,19 @@ export const STAMPS = [
   { src: stampWhat, alt: "what?" },
   { src: stampWhenDidYou, alt: "when did you" },
   { src: stampYouGame, alt: "you game?" },
+];
+
+export const GIFS = [
+  { src: gif1, alt: "animated CHU² sticker 1" },
+  { src: gif2, alt: "animated CHU² sticker 2" },
+  { src: gif3, alt: "animated CHU² sticker 3" },
+  { src: gif4, alt: "animated CHU² sticker 4" },
+  { src: gif5, alt: "animated CHU² sticker 5" },
+  { src: gif6, alt: "animated CHU² sticker 6" },
+  { src: gif7, alt: "animated CHU² sticker 7" },
+  { src: gif8, alt: "animated CHU² sticker 8" },
+  { src: gif9, alt: "animated CHU² sticker 9" },
+  { src: gif10, alt: "animated CHU² sticker 10" },
 ];
 
 export const MARQUEE_ITEMS = [
