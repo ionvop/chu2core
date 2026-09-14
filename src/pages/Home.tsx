@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
 import { Gif } from "@/components/Gif";
@@ -22,6 +24,17 @@ const cardIconMap: Record<Glyph, React.ReactNode> = {
 };
 
 export function Home() {
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+
+  // Hand the typed message off to the contact page's chat composer via a URL
+  // query param — it pre-fills the reply field there without sending anything.
+  function sendMessage() {
+    const value = message.trim();
+    if (value === "") return;
+    navigate(`/contact?message=${encodeURIComponent(value)}`);
+  }
+
   return (
     <div className="relative flex flex-col gap-12">
       {/* ── HERO section ── */}
@@ -61,11 +74,21 @@ export function Home() {
                 <span className="text-lg leading-none">💬</span>
                 <input
                   type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") sendMessage();
+                  }}
                   placeholder="send me a message!"
                   className="win-input min-w-0 flex-1 text-sm"
                   aria-label="Send a message"
                 />
-                <button type="button" className="win-button font-kawaii text-sm font-bold">
+                <button
+                  type="button"
+                  onClick={sendMessage}
+                  disabled={message.trim() === ""}
+                  className="win-button font-kawaii text-sm font-bold"
+                >
                   ✉ send
                 </button>
               </div>
