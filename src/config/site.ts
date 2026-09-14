@@ -85,7 +85,7 @@ export const SITE_PROJECTS: SiteProject[] = [
     name: "ionvop",
     tagline: "the landing page you're on!",
     description:
-      "A personal homepage and a portfolio containing the collection of services made by ionvop.",
+      "A personal homepage and a portfolio containing the collection of services made by me.",
     gradient: "linear-gradient(135deg, #ffd9e8, #ff9ec4)",
   },
   {
@@ -101,7 +101,7 @@ export const SITE_PROJECTS: SiteProject[] = [
     name: "SauceDB",
     tagline: "anime & manga sauce archiver",
     description:
-      "A simple database for archiving sources of anime and manga that took a little more effort to find. One of ionvop's first projects, mostly for personal use.",
+      "A simple database for archiving sources of anime and manga that took a little more effort to find. One of my first projects, mostly for personal use.",
     gradient: "linear-gradient(135deg, #d45d79, #c0506e)",
   },
 ];
