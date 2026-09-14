@@ -21,7 +21,7 @@ This API is designed to run on **InfinityFree**, which imposes two hard limits t
 
 > **Method tunneling:** For any non-GET operation, send a `POST` request with a JSON body that includes `"_method": "PUT"` (or `"DELETE"`). The server dispatches on that value.
 
-> **Message indexing:** When editing or deleting messages, each message is addressed by a zero-based `index` relative to the full session history as returned by `GET /api/chat`. `index` `0` is the **first (oldest)** message and `messages.length - 1` is the **latest**. The index is resolved against the current history each request, so it may shift after other edits or deletions.
+> **Message indexing:** When editing or deleting messages, each message is addressed by a zero-based `index` relative to the full session history as returned by `GET /api/message`. `index` `0` is the **first (oldest)** message and `messages.length - 1` is the **latest**. The index is resolved against the current history each request, so it may shift after other edits or deletions.
 
 ---
 
@@ -41,7 +41,7 @@ Returns a simple greeting to confirm the API is reachable.
 
 ---
 
-### `GET /api/chat?key=<session_key>` — Get message history
+### `GET /api/message?key=<session_key>` — Get message history
 
 Returns the full message history for an existing session, oldest first.
 
@@ -78,7 +78,7 @@ Error body:
 
 ---
 
-### `POST /api/chat` — Send a message
+### `POST /api/message` — Send a message
 
 Sends a user message to the model and returns the assistant's reply. If `key` is omitted, a **new session is created** and its key is returned.
 
@@ -128,7 +128,7 @@ The `board` field is the current global textboard content. It is included on eve
 
 ---
 
-### `POST /api/chat` with `_method: "PUT"` — Edit a message
+### `POST /api/message` with `_method: "PUT"` — Edit a message
 
 Edits the content of an existing message, addressed by its zero-based index in the session history.
 
@@ -173,7 +173,7 @@ Edits the content of an existing message, addressed by its zero-based index in t
 
 ---
 
-### `POST /api/chat` with `_method: "DELETE"` — Delete a message
+### `POST /api/message` with `_method: "DELETE"` — Delete a message
 
 Deletes an existing message from a session, addressed by its zero-based index in the session history.
 
@@ -217,7 +217,7 @@ Deletes an existing message from a session, addressed by its zero-based index in
 
 ### `GET /api/board` — Read the global textboard
 
-Returns the single global textboard blob shared by every visitor. This is a read-only endpoint for the frontend; all writes go through the AI via the chat endpoint.
+Returns the single global textboard blob shared by every visitor. This is a read-only endpoint for the frontend; all writes go through the AI via the message endpoint.
 
 **Responses**
 
@@ -324,7 +324,7 @@ Set your OpenRouter API key in `config.php`:
 $OPENROUTER_API_KEY = "sk-or-v1-...";
 ```
 
-The model used for completions is defined in `chat/index.php`:
+The model used for completions is defined in `message/index.php`:
 
 ```php
 $MODEL = "deepseek/deepseek-v4-flash-0731";
