@@ -7,17 +7,12 @@ interface ChatMessage {
 }
 
 const API_BASE = "/api/chat";
-const BOARD_API = "/api/board";
 const STORAGE_KEY = "ionvop.chat.key";
 
 /**
  * The CHU²-powered contact assistant. Talks to the same-origin PHP chat API
  * (`public/api/chat`), persists the session key in localStorage so the
  * conversation survives a page refresh, and renders the history on mount.
- *
- * It also reads the global textboard (`public/api/board`) and displays it. The
- * board is written only by the AI: whenever a chat reply carries a `board`
- * field, the displayed board is refreshed to match.
  */
 export function Chat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -28,33 +23,8 @@ export function Chat() {
   );
   const [error, setError] = useState<string | null>(null);
   const [confirmingNew, setConfirmingNew] = useState(false);
-  const [board, setBoard] = useState<string>("");
-  const [boardError, setBoardError] = useState<string | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Load the global textboard on mount.
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(BOARD_API)
-      .then((res) => {
-        if (!res.ok) throw new Error("Couldn't load the textboard.");
-        return res.json();
-      })
-      .then((data: { content?: string }) => {
-        if (!cancelled && typeof data.content === "string") {
-          setBoard(data.content);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setBoardError("textboard unavailable");
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // Load existing history on mount if we already have a session key.
   useEffect(() => {
@@ -137,12 +107,6 @@ export function Chat() {
         setSessionKey(data.key);
       }
 
-      // The AI may have updated the global textboard; refresh the display.
-      if (typeof data.board === "string") {
-        setBoard(data.board);
-        setBoardError(null);
-      }
-
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.message },
@@ -156,26 +120,6 @@ export function Chat() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* ── global textboard ── */}
-      <div className="win-inset rounded-[2px] bg-cream/90 px-3 py-2">
-        <p className="mb-1 font-kawaii text-xs font-bold text-plum-muted">
-          ✦ global textboard ✦
-        </p>
-        {boardError ? (
-          <p className="font-kawaii text-xs text-flamingo-deep">
-            ⚠ {boardError}
-          </p>
-        ) : board.trim() === "" ? (
-          <p className="font-kawaii text-xs italic text-plum-muted">
-            the board is empty — ask CHU² to write something! ♡
-          </p>
-        ) : (
-          <p className="whitespace-pre-wrap font-kawaii text-sm leading-relaxed text-plum">
-            {board}
-          </p>
-        )}
-      </div>
-
       {/* ── new conversation ── */}
       <div className="flex justify-end">
         <button
