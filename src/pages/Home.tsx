@@ -1,5 +1,6 @@
 import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
+import { Gif } from "@/components/Gif";
 import { Character } from "@/components/Character";
 import { WinCard } from "@/components/WinCard";
 import {
@@ -7,6 +8,7 @@ import {
   HERO_CARDS,
   SITE_PROJECTS,
   MARQUEE_ITEMS,
+  GIFS,
 } from "@/config/site";
 
 type Glyph = "code" | "game" | "heart";
@@ -23,6 +25,20 @@ export function Home() {
     <div className="relative flex flex-col gap-12">
       {/* ── HERO section ── */}
       <section className="relative flex flex-col items-center gap-6 text-center">
+        {/* floating animated stickers flanking the hero */}
+        <Gif
+          src={GIFS[0].src}
+          alt={GIFS[0].alt}
+          width={72}
+          className="pointer-events-none absolute -left-4 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[1].src}
+          alt={GIFS[1].alt}
+          width={72}
+          className="pointer-events-none absolute -right-4 top-2 z-10 hidden animate-bob rotate-6 sm:block"
+        />
+
         <Stamps count={3} width={80} className="-mb-2" />
 
         <h1 className="font-pixel text-6xl leading-none text-flamingo-deep pixel-shadow sm:text-7xl">
@@ -53,6 +69,13 @@ export function Home() {
             </div>
           </div>
           <Character variant="live" className="w-28 sm:w-36" />
+          {/* animated sticker peeking by the message frame */}
+          <Gif
+            src={GIFS[2].src}
+            alt={GIFS[2].alt}
+            width={64}
+            className="pointer-events-none absolute -bottom-3 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
+          />
         </div>
       </section>
 
@@ -85,6 +108,18 @@ export function Home() {
 
       {/* ── sites / projects ── */}
       <section className="relative">
+        <Gif
+          src={GIFS[3].src}
+          alt={GIFS[3].alt}
+          width={64}
+          className="pointer-events-none absolute -left-3 top-0 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[4].src}
+          alt={GIFS[4].alt}
+          width={64}
+          className="pointer-events-none absolute -right-3 top-0 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
         <h2 className="mb-5 text-center font-pixel text-3xl text-rose-deep pixel-shadow">
           my little sites ✧
         </h2>
@@ -108,6 +143,12 @@ export function Home() {
 
       {/* ── closing stamps ── */}
       <section className="-mt-2 flex justify-center">
+        <Gif
+          src={GIFS[5].src}
+          alt={GIFS[5].alt}
+          width={64}
+          className="pointer-events-none absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
+        />
         <Stamps count={4} width={72} className="-rotate-1" />
       </section>
     </div>
