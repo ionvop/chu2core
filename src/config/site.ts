@@ -110,12 +110,12 @@ export const HERO_CARDS = [
   {
     icon: "code",
     title: "Software Development",
-    body: "I am currently a college student studying computer science and I am learning to be a web, software, and game developer.",
+    body: "I am a computer science graduate and I'm working to be a web, software, and game developer.",
   },
   {
     icon: "game",
     title: "Games and Other Hobbies",
-    body: "I like playing rhythm games and fast-paced Tetris games. I'm also learning music production and my favorite genre is dubstep.",
+    body: "I like playing rhythm games and fast-paced Tetris games, but my main games right now are Strinova and Neverness to Everness.",
   },
   {
     icon: "heart",
