@@ -3,6 +3,7 @@ import { Stamps } from "@/components/Stamps";
 import { Gif } from "@/components/Gif";
 import { WinCard, Control } from "@/components/WinCard";
 import { Chat } from "@/components/Chat";
+import { Textboard } from "@/components/Textboard";
 import { SOCIALS, MARQUEE_ITEMS, GIFS } from "@/config/site";
 
 // emoji stand-ins for each platform's logo (tiny + no runtime cost)
@@ -144,6 +145,25 @@ export function Contact() {
           </p>
           <Chat />
         </WinCard>
+      </section>
+
+      {/* ── global textboard window ── */}
+      <section className="relative">
+        <Gif
+          src={GIFS[6].src}
+          alt={GIFS[6].alt}
+          width={88}
+          draggable
+          className="absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[7].src}
+          alt={GIFS[7].alt}
+          width={88}
+          draggable
+          className="absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
+        <Textboard />
       </section>
 
       {/* ── closing stamps ── */}
