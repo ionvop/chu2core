@@ -31,13 +31,15 @@ export function Home() {
           src={GIFS[0].src}
           alt={GIFS[0].alt}
           width={96}
-          className="pointer-events-none absolute -left-4 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
+          draggable
+          className="absolute -left-4 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
         />
         <Gif
           src={GIFS[1].src}
           alt={GIFS[1].alt}
           width={96}
-          className="pointer-events-none absolute -right-4 top-2 z-10 hidden animate-bob rotate-6 sm:block"
+          draggable
+          className="absolute -right-4 top-2 z-10 hidden animate-bob rotate-6 sm:block"
         />
 
         <Stamps count={3} width={80} className="-mb-2" />
@@ -75,7 +77,8 @@ export function Home() {
             src={GIFS[2].src}
             alt={GIFS[2].alt}
             width={88}
-            className="pointer-events-none absolute -bottom-3 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
+            draggable
+            className="absolute -bottom-3 right-2 z-10 hidden animate-float-slow rotate-3 sm:block"
           />
         </div>
       </section>
@@ -113,13 +116,15 @@ export function Home() {
           src={GIFS[3].src}
           alt={GIFS[3].alt}
           width={88}
-          className="pointer-events-none absolute -left-3 top-0 z-10 hidden animate-bob -rotate-6 sm:block"
+          draggable
+          className="absolute -left-3 top-0 z-10 hidden animate-bob -rotate-6 sm:block"
         />
         <Gif
           src={GIFS[4].src}
           alt={GIFS[4].alt}
           width={88}
-          className="pointer-events-none absolute -right-3 top-0 z-10 hidden animate-float-slow rotate-6 sm:block"
+          draggable
+          className="absolute -right-3 top-0 z-10 hidden animate-float-slow rotate-6 sm:block"
         />
         <h2 className="mb-5 text-center font-pixel text-3xl text-rose-deep pixel-shadow">
           my little sites ✧
@@ -148,7 +153,8 @@ export function Home() {
           src={GIFS[5].src}
           alt={GIFS[5].alt}
           width={88}
-          className="pointer-events-none absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
+          draggable
+          className="absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
         />
         <Stamps count={4} width={72} className="-rotate-1" />
       </section>
