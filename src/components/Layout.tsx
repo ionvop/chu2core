@@ -86,13 +86,13 @@ export function Layout({ children }: LayoutProps) {
         <Gif
           src={GIFS[0].src}
           alt={GIFS[0].alt}
-          width={64}
+          width={88}
           className="pointer-events-none absolute -left-3 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
         />
         <Gif
           src={GIFS[1].src}
           alt={GIFS[1].alt}
-          width={64}
+          width={88}
           className="pointer-events-none absolute -right-3 top-2 z-10 hidden animate-float-slow rotate-6 sm:block"
         />
         <div className="win-outset mx-auto max-w-5xl rounded-[2px] bg-blush/80">
