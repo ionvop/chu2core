@@ -5,6 +5,9 @@ import { fileURLToPath, URL } from "node:url";
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Emit relative asset URLs so the build works when served from any
+  // subdirectory (e.g. https://ionvop.epizy.com/home/), not just the root.
+  base: "./",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
