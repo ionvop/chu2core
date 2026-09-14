@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Marquee } from "./Marquee";
 import { Sparkles } from "./Sparkles";
+import { Gif } from "./Gif";
 import { Control } from "./WinCard";
-import { NAV, SITE, COPYRIGHT_YEAR, MARQUEE_ITEMS } from "@/config/site";
+import { NAV, SITE, COPYRIGHT_YEAR, MARQUEE_ITEMS, GIFS } from "@/config/site";
 
 interface LayoutProps {
   children: ReactNode;
@@ -82,6 +83,18 @@ export function Layout({ children }: LayoutProps) {
 
       {/* ── footer ── */}
       <footer className="relative z-10 px-4 pb-8 sm:px-6">
+        <Gif
+          src={GIFS[0].src}
+          alt={GIFS[0].alt}
+          width={64}
+          className="pointer-events-none absolute -left-3 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[1].src}
+          alt={GIFS[1].alt}
+          width={64}
+          className="pointer-events-none absolute -right-3 top-2 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
         <div className="win-outset mx-auto max-w-5xl rounded-[2px] bg-blush/80">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <p className="font-pixel text-sm text-plum">
