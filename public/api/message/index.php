@@ -209,7 +209,7 @@ function saveBoard(string $content) {
 // handle those two real HTTP methods here.
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
-        // GET /chat?key=<session key> -> returns the message history for a session.
+        // GET /message?key=<session key> -> returns the message history for a session.
         $key = $_GET["key"] ?? null;
 
         if ($key == null || $key == "") {
@@ -233,7 +233,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         // verb is tunneled through the `_method` field in the JSON body.
         switch ($data["_method"]) {
             case "POST":
-                // POST /chat with body { "key": ?, "content": "..." } -> sends a
+                // POST /message with body { "key": ?, "content": "..." } -> sends a
                 // message. If 'key' is omitted, a new session is created.
                 $key = $data["key"] ?? null;
                 $content = $data["content"] ?? null;
@@ -289,7 +289,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 ]);
                 exit;
             case "PUT":
-                // POST /chat with _method "PUT" and body
+                // POST /message with _method "PUT" and body
                 // { "key": ?, "index": N, "content": "..." } -> edits the
                 // message at zero-based index N (0 = first/oldest message).
                 $key = $data["key"] ?? null;
@@ -335,7 +335,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 echo json_encode(["key" => $key, "messages" => loadHistory($sessionId)]);
                 exit;
             case "DELETE":
-                // POST /chat with _method "DELETE" and body
+                // POST /message with _method "DELETE" and body
                 // { "key": ?, "index": N } -> deletes the message at
                 // zero-based index N (0 = first/oldest message).
                 $key = $data["key"] ?? null;
