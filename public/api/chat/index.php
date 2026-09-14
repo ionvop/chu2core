@@ -150,6 +150,61 @@ function askModel(array $history): array {
     return ["ok" => true, "content" => $content];
 }
 
+/**
+ * Parses the assistant's reply to extract the chat text and an optional board
+ * update. The model is instructed to reply as JSON:
+ *
+ *     { "reply": "...", "board": "<full new board text, omit to leave unchanged>" }
+ *
+ * If the reply is not valid JSON (or lacks a "reply" field), the whole reply is
+ * treated as plain chat text and no board change is made.
+ *
+ * @param string $content The raw assistant reply.
+ * @return array An associative array with 'reply' (string) and 'board'
+ *               (string|null). 'board' is null when no board change is requested.
+ */
+function parseBoardReply(string $content): array {
+    $decoded = json_decode($content, true);
+
+    if (is_array($decoded) && isset($decoded["reply"]) && is_string($decoded["reply"])) {
+        $board = (isset($decoded["board"]) && is_string($decoded["board"]))
+            ? $decoded["board"]
+            : null;
+        return ["reply" => $decoded["reply"], "board" => $board];
+    }
+
+    return ["reply" => $content, "board" => null];
+}
+
+/**
+ * Loads the current global textboard content.
+ *
+ * @return string The current board content (empty string if none).
+ */
+function loadBoard(): string {
+    global $db;
+    $result = $db->query("SELECT `content` FROM `textboard` ORDER BY `id` ASC LIMIT 1");
+    $row = $result->fetchArray();
+    if ($row == false) {
+        return "";
+    }
+    return $row["content"];
+}
+
+/**
+ * Replaces the global textboard content with the given text.
+ *
+ * @param string $content The new board content.
+ */
+function saveBoard(string $content) {
+    global $db;
+    executePreparedQuery(
+        $db,
+        "UPDATE `textboard` SET `content` = :content, `updated_at` = datetime() WHERE `id` = (SELECT `id` FROM `textboard` ORDER BY `id` ASC LIMIT 1)",
+        [":content" => $content]
+    );
+}
+
 // Outer switch: InfinityFree only lets us receive GET and POST, so we only
 // handle those two real HTTP methods here.
 switch ($_SERVER["REQUEST_METHOD"]) {
@@ -217,9 +272,21 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                     exit;
                 }
 
+                // The model may return a structured reply that also updates the
+                // global textboard. Parse it, apply any board change, and return
+                // the current board so the frontend can stay in sync.
+                $parsed = parseBoardReply($answer["content"]);
+                if ($parsed["board"] !== null) {
+                    saveBoard($parsed["board"]);
+                }
+
                 // Persist the assistant's reply and return it to the client.
-                insertMessage($sessionId, "assistant", $answer["content"]);
-                echo json_encode(["key" => $key, "message" => $answer["content"]]);
+                insertMessage($sessionId, "assistant", $parsed["reply"]);
+                echo json_encode([
+                    "key" => $key,
+                    "message" => $parsed["reply"],
+                    "board" => loadBoard()
+                ]);
                 exit;
             case "PUT":
                 // POST /chat with _method "PUT" and body
