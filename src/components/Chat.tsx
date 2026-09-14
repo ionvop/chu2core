@@ -7,13 +7,13 @@ interface ChatMessage {
   content: string;
 }
 
-// Relative so it resolves under the current subdirectory (e.g. /home/api/chat).
-const API_BASE = "api/chat";
+// Relative so it resolves under the current subdirectory (e.g. /home/api/message).
+const API_BASE = "api/message";
 const STORAGE_KEY = "ionvop.chat.key";
 
 /**
  * The CHU²-powered contact assistant. Talks to the same-origin PHP chat API
- * (`public/api/chat`), persists the session key in localStorage so the
+ * (`public/api/message`), persists the session key in localStorage so the
  * conversation survives a page refresh, and renders the history on mount.
  */
 export function Chat() {
