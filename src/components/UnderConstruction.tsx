@@ -57,7 +57,7 @@ export function UnderConstruction({ pageName }: UnderConstructionProps) {
       </h1>
       <p className="max-w-md font-kawaii text-lg text-plum-muted">
         The <span className="font-pixel text-rose">{pageName}</span> page isn't built
-        yet — I'm busy being simping for CHU², probably. Come back soon! ✧
+        yet — I'm busy simping for CHU², probably. Come back soon! ✧
       </p>
       <p className="max-w-sm text-sm font-kawaii text-plum-muted">
         ...or make yourself at home and check out the{" "}
