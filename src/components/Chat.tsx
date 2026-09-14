@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import chu2Assistant from "@/assets/chu2-assistant.webp";
 
 interface ChatMessage {
@@ -25,6 +26,15 @@ export function Chat() {
   const [confirmingNew, setConfirmingNew] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+
+  // Pre-fill the reply field with a message handed off from the home page
+  // (`/contact?message=...`). We only pre-fill — never auto-send.
+  useEffect(() => {
+    const draft = searchParams.get("message");
+    if (draft) setInput(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Load existing history on mount if we already have a session key.
   useEffect(() => {
