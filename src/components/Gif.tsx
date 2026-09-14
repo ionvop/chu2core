@@ -11,9 +11,9 @@ interface GifProps {
   title?: string;
   /**
    * When true, the sticker can be grabbed and dragged around with the mouse
-   * or touch. The drag offset is applied as a `translate` on a wrapper div,
-   * and the idle bob/float/wiggle animations are suspended while dragging so
-   * they don't fight the transform.
+   * or touch. The drag offset is applied via the CSS `translate` property so
+   * it composes with the rotation classes and bob/float animations instead of
+   * fighting them. Positions are session-only (reset on reload).
    */
   draggable?: boolean;
 }
@@ -40,7 +40,42 @@ export function Gif({
     null,
   );
 
-  const img = (
+  const handlePointerDown = (e: ReactPointerEvent<HTMLImageElement>) => {
+    // ignore right-clicks / non-primary buttons
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLImageElement).setPointerCapture(e.pointerId);
+    dragRef.current = { startX: e.clientX, startY: e.clientY, baseX: offset.x, baseY: offset.y };
+    setDragging(true);
+  };
+
+  const handlePointerMove = (e: ReactPointerEvent<HTMLImageElement>) => {
+    if (!dragRef.current) return;
+    const { startX, startY, baseX, baseY } = dragRef.current;
+    setOffset({ x: baseX + (e.clientX - startX), y: baseY + (e.clientY - startY) });
+  };
+
+  const handlePointerUp = (e: ReactPointerEvent<HTMLImageElement>) => {
+    if (!dragRef.current) return;
+    dragRef.current = null;
+    setDragging(false);
+    try {
+      (e.currentTarget as HTMLImageElement).releasePointerCapture(e.pointerId);
+    } catch {
+      /* already released */
+    }
+  };
+
+  const dragStyle: CSSProperties = draggable
+    ? {
+        translate: `${offset.x}px ${offset.y}px`,
+        touchAction: "none",
+        cursor: dragging ? "grabbing" : "grab",
+        ...(dragging ? { animation: "none", zIndex: 50 } : {}),
+      }
+    : {};
+
+  return (
     <img
       src={src}
       alt={alt}
@@ -48,56 +83,12 @@ export function Gif({
       loading="lazy"
       width={width}
       draggable={false}
+      onPointerDown={draggable ? handlePointerDown : undefined}
+      onPointerMove={draggable ? handlePointerMove : undefined}
+      onPointerUp={draggable ? handlePointerUp : undefined}
+      onPointerCancel={draggable ? handlePointerUp : undefined}
       className={`sticker-shadow select-none transition-transform duration-200 ease-in-out hover:animate-wiggle ${className}`}
-      style={{ ...style }}
+      style={{ ...style, ...dragStyle }}
     />
-  );
-
-  if (!draggable) return img;
-
-  const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    // ignore right-clicks / non-primary buttons
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
-    dragRef.current = { startX: e.clientX, startY: e.clientY, baseX: offset.x, baseY: offset.y };
-    setDragging(true);
-  };
-
-  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!dragRef.current) return;
-    const { startX, startY, baseX, baseY } = dragRef.current;
-    setOffset({ x: baseX + (e.clientX - startX), y: baseY + (e.clientY - startY) });
-  };
-
-  const handlePointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!dragRef.current) return;
-    dragRef.current = null;
-    setDragging(false);
-    try {
-      (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
-    } catch {
-      /* already released */
-    }
-  };
-
-  const wrapperStyle: CSSProperties = {
-    transform: `translate(${offset.x}px, ${offset.y}px)`,
-    touchAction: "none",
-    cursor: "grab",
-    ...(dragging ? { cursor: "grabbing", animation: "none" } : {}),
-  };
-
-  return (
-    <div
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      style={wrapperStyle}
-      className={`inline-block ${dragging ? "z-50" : ""}`}
-    >
-      {img}
-    </div>
   );
 }
