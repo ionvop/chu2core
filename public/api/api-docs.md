@@ -113,9 +113,12 @@ Sends a user message to the model and returns the assistant's reply. If `key` is
 ```json
 {
   "key": "session_abc123",
-  "message": "The capital of France is Paris."
+  "message": "The capital of France is Paris.",
+  "board": "Welcome to the global textboard!"
 }
 ```
+
+The `board` field is the current global textboard content. It is included on every reply so the frontend can stay in sync; the AI updates it whenever a user asks it to write to the board.
 
 | Status | Condition                                                                 |
 |--------|---------------------------------------------------------------------------|
@@ -212,6 +215,58 @@ Deletes an existing message from a session, addressed by its zero-based index in
 
 ---
 
+### `GET /api/board` — Read the global textboard
+
+Returns the single global textboard blob shared by every visitor. This is a read-only endpoint for the frontend; all writes go through the AI via the chat endpoint.
+
+**Responses**
+
+`200 OK` — Board content retrieved.
+
+```json
+{
+  "content": "Welcome to the global textboard!"
+}
+```
+
+---
+
+### `POST /api/board` — Replace the global textboard
+
+Replaces the entire global textboard content. Intended for server-side/AI use; the frontend normally reads the board and lets the AI write to it.
+
+**Request body** (`application/json`)
+
+| Field     | Type   | Required | Description                          |
+|-----------|--------|----------|--------------------------------------|
+| `_method` | string | Yes      | Must be `"POST"`.                    |
+| `content` | string | Yes      | The full new board content.          |
+
+**Example**
+
+```json
+{
+  "_method": "POST",
+  "content": "New board content."
+}
+```
+
+**Responses**
+
+`200 OK` — Board replaced. Returns the updated content.
+
+```json
+{
+  "content": "New board content."
+}
+```
+
+| Status | Condition                          |
+|--------|------------------------------------|
+| `400`  | `content` field is missing.        |
+
+---
+
 ### Unsupported methods
 
 Any request that is not `GET`, or a `POST` without a recognized `_method`, returns:
@@ -248,6 +303,16 @@ SQLite database (`database.db`) with two tables:
 | `role`      | TEXT    | `user` or `assistant`.                       |
 | `content`   | TEXT    | Message text.                                |
 | `created_at`| TEXT    | Defaults to current datetime.                |
+
+**`textboard`**
+
+| Column      | Type    | Notes                                        |
+|-------------|---------|----------------------------------------------|
+| `id`        | INTEGER | Primary key, auto-increment.                 |
+| `content`   | TEXT    | The single global textboard blob.            |
+| `updated_at`| TEXT    | Defaults to current datetime.                |
+
+The `textboard` table holds exactly one row (seeded on init) representing the global board shared by all visitors.
 
 ---
 
