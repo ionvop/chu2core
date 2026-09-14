@@ -7,7 +7,7 @@
  * meant to be read directly by the frontend, while all writes are performed by
  * the AI (CHU²) acting as an intermediary between users and the board.
  *
- * InfinityFree constraints (same as the chat endpoint):
+ * InfinityFree constraints (same as the message endpoint):
  *   - Same-origin only (no CORS headers).
  *   - Only GET and POST are allowed; the real verb is tunneled through the
  *     `_method` field in the JSON body.
