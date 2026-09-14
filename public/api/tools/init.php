@@ -31,5 +31,13 @@ if ($success == false) {
     exit (1);
 }
 
+// Seed the global textboard with a single empty row so reads always succeed.
+$success = $db->exec("INSERT INTO `textboard` (`content`) VALUES ('')");
+
+if ($success == false) {
+    echo "Failed to seed textboard.";
+    exit (1);
+}
+
 echo "Database initialized.";
 exit(0);
