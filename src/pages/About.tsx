@@ -1,5 +1,6 @@
 import { Marquee } from "@/components/Marquee";
 import { Stamps } from "@/components/Stamps";
+import { Gif } from "@/components/Gif";
 import { Character } from "@/components/Character";
 import { WinCard, Control } from "@/components/WinCard";
 import avatar from "@/assets/avatar.webp";
@@ -10,6 +11,7 @@ import {
   ABOUT_TITLES,
   ABOUT_BIO,
   ABOUT_LAST_UPDATED,
+  GIFS,
 } from "@/config/site";
 
 export function About() {
@@ -17,6 +19,18 @@ export function About() {
     <div className="relative flex flex-col gap-12">
       {/* ── header ── */}
       <section className="relative flex flex-col items-center gap-6 text-center">
+        <Gif
+          src={GIFS[0].src}
+          alt={GIFS[0].alt}
+          width={72}
+          className="pointer-events-none absolute -left-4 top-2 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[1].src}
+          alt={GIFS[1].alt}
+          width={72}
+          className="pointer-events-none absolute -right-4 top-2 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
         <Stamps count={3} width={80} className="-mb-2" />
 
         <h1 className="font-pixel text-6xl leading-none text-flamingo-deep pixel-shadow sm:text-7xl">
@@ -29,6 +43,18 @@ export function About() {
 
       {/* ── profile window ── */}
       <section className="relative">
+        <Gif
+          src={GIFS[2].src}
+          alt={GIFS[2].alt}
+          width={64}
+          className="pointer-events-none absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[3].src}
+          alt={GIFS[3].alt}
+          width={64}
+          className="pointer-events-none absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
         <WinCard
           title="profile.exe"
           icon={<span className="text-base leading-none">🖥</span>}
@@ -106,6 +132,18 @@ export function About() {
 
       {/* ── my waifu window ── */}
       <section className="relative">
+        <Gif
+          src={GIFS[4].src}
+          alt={GIFS[4].alt}
+          width={64}
+          className="pointer-events-none absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[5].src}
+          alt={GIFS[5].alt}
+          width={64}
+          className="pointer-events-none absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
         <WinCard
           title="waifu.exe"
           icon={<span className="text-base leading-none">💗</span>}
@@ -125,6 +163,12 @@ export function About() {
 
       {/* ── closing stamps ── */}
       <section className="-mt-2 flex justify-center">
+        <Gif
+          src={GIFS[6].src}
+          alt={GIFS[6].alt}
+          width={64}
+          className="pointer-events-none absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
+        />
         <Stamps count={4} width={72} className="-rotate-1" />
       </section>
     </div>
