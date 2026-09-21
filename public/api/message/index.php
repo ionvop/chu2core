@@ -136,7 +136,24 @@ function askModel(array $history): array {
         ],
         "body" => [
             "model" => $MODEL,
-            "messages" => $history
+            "messages" => $history,
+            "reasoning_effort" => "none",
+            "response_format" => [
+                "type" => "json_schema",
+                "json_schema" => [
+                    "name" => "chu2_reply",
+                    "strict" => true,
+                    "schema" => [
+                        "type" => "object",
+                        "properties" => [
+                            "reply" => ["type" => "string"],
+                            "board" => ["type" => ["string", "null"]]
+                        ],
+                        "required" => ["reply", "board"],
+                        "additionalProperties" => false
+                    ]
+                ]
+            ]
         ],
         "timeout" => 120
     ]);
@@ -154,7 +171,7 @@ function askModel(array $history): array {
  * Parses the assistant's reply to extract the chat text and an optional board
  * update. The model is instructed to reply as JSON:
  *
- *     { "reply": "...", "board": "<full new board text, omit to leave unchanged>" }
+ *     { "reply": "...", "board": "<full new board text or null to leave unchanged>" }
  *
  * If the reply is not valid JSON (or lacks a "reply" field), the whole reply is
  * treated as plain chat text and no board change is made.
