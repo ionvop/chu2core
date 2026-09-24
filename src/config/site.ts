@@ -27,6 +27,10 @@ import gif8 from "@/assets/gifs/chu2-8.gif";
 import gif9 from "@/assets/gifs/chu2-9.gif";
 import gif10 from "@/assets/gifs/chu2-10.gif";
 
+import jailGeneral from "@/assets/gifs/jail/general.gif";
+import jailHateSpeech from "@/assets/gifs/jail/hate-speech.gif";
+import jailHorny from "@/assets/gifs/jail/horny-jail.gif";
+
 export const SITE = {
   name: "ionvop",
   tagline: "my little corner of the web",
@@ -182,3 +186,68 @@ export const MARQUEE_ITEMS = [
 ] as const;
 
 export const COPYRIGHT_YEAR = new Date().getFullYear();
+
+/* ── naughty corner (timeout) ─────────────────────────────────────────
+ * CHU² redirects users here when they misbehave. The `timeoutType` from the
+ * API response picks the centerpiece GIF, headline, and accent color.
+ */
+
+/** sessionStorage key the chat uses to hand the timeout directive to /jail. */
+export const JAIL_STORAGE_KEY = "ionvop.jail";
+
+export type TimeoutType = "hate_speech" | "horny_jail" | "general";
+
+export interface JailType {
+  /** headline shown under the window title */
+  headline: string;
+  /** short scolding sub-line */
+  subtext: string;
+  /** accent color used for the headline + timer */
+  accent: string;
+  /** centerpiece GIF */
+  gif: string;
+  /** alt text for the GIF */
+  gifAlt: string;
+  /** how long (seconds) the user must stand in the corner */
+  seconds: number;
+}
+
+export const JAIL_TYPES: Record<TimeoutType, JailType> = {
+  horny_jail: {
+    headline: "horny jail!",
+    subtext: "keep it in your pants, seriously. ♡",
+    accent: "#ff5a4e",
+    gif: jailHorny,
+    gifAlt: "CHU² throwing you in horny jail",
+    seconds: 60,
+  },
+  hate_speech: {
+    headline: "that's not okay!",
+    subtext: "we don't do that here. think about what you said.",
+    accent: "#c0506e",
+    gif: jailHateSpeech,
+    gifAlt: "CHU² glaring at you for hateful behavior",
+    seconds: 60,
+  },
+  general: {
+    headline: "naughty corner!",
+    subtext: "go stand in the corner and think about what you've done.",
+    accent: "#d45d79",
+    gif: jailGeneral,
+    gifAlt: "CHU² sending you to the naughty corner",
+    seconds: 30,
+  },
+};
+
+/** Fallback reason when the page is opened directly with no directive. */
+export const JAIL_DEFAULT_REASON =
+  "You know what you did. Now sit here and think about it until I say you can leave.";
+
+/** Scolding ticker shown across the top of the naughty corner. */
+export const JAIL_MARQUEE_ITEMS = [
+  "✖ no bad vibes allowed ✖",
+  "★ think about what you've done ★",
+  "✖ CHU² is very disappointed in you ✖",
+  "★ this corner is for reflecting ★",
+  "✖ behave yourself next time ✖",
+] as const;
