@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import chu2Assistant from "@/assets/chu2-assistant.webp";
+import { JAIL_STORAGE_KEY } from "@/config/site";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
+/** The timeout directive CHU² can attach to a reply. */
+interface TimeoutDirective {
+  timeoutType: "hate_speech" | "horny_jail" | "general";
+  reason: string;
+}
+
 // Relative so it resolves under the current subdirectory (e.g. /home/api/message).
 const API_BASE = "api/message/index.php";
 const STORAGE_KEY = "ionvop.chat.key";
+
+// How long CHU²'s parting message lingers in the chat before the redirect.
+const JAIL_REDIRECT_DELAY = 1800;
 
 /**
  * The CHU²-powered contact assistant. Talks to the same-origin PHP chat API
@@ -28,6 +38,7 @@ export function Chat() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Pre-fill the reply field with a message handed off from the home page
   // (`/contact?message=...`). We only pre-fill — never auto-send.
@@ -122,6 +133,14 @@ export function Chat() {
         ...prev,
         { role: "assistant", content: data.message },
       ]);
+
+      // If CHU² timed the user out, let her parting message linger briefly,
+      // then hand the directive off to the naughty corner and redirect.
+      const timeout: TimeoutDirective | null = data.timeout ?? null;
+      if (timeout) {
+        sessionStorage.setItem(JAIL_STORAGE_KEY, JSON.stringify(timeout));
+        window.setTimeout(() => navigate("/jail"), JAIL_REDIRECT_DELAY);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
