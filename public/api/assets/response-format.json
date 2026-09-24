@@ -27,7 +27,7 @@
                     },
                     {
                         "type": "object",
-                        "description": "Use this response format if the user wants to send a message to ionvop.",
+                        "description": "Use this response format if the user wants to modify the textboard.",
                         "additionalProperties": false,
                         "properties": {
                             "type": {
@@ -35,36 +35,43 @@
                                 "description": "The type of the response.",
                                 "enum": ["mail_to_ionvop"]
                             },
-                            "mail": {
-                                "type": "object",
-                                "description": "The mail that will be sent to ionvop.",
-                                "additionalProperties": false,
-                                "properties": {
-                                    "subject": {
-                                        "type": "string",
-                                        "description": "The subject of the user's mail. Must be non-empty and under 100 characters."
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "description": "The name of the user. Use 'N/A' if the user wants to remain anonymous."
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "description": "The email of the user that ionvop can use to reply to. Must be a valid email address (e.g. name@example.com). Use 'N/A' only if the user explicitly wants to remain anonymous, and warn them that ionvop may not be able to reply and anonymous mails may be treated as spam."
-                                    },
-                                    "body": {
-                                        "type": "string",
-                                        "description": "The content of the mail. Must be non-empty, meaningful, and under 2000 characters."
-                                    }
-                                },
-                                "required": ["subject", "name", "email", "body"]
-                            },
                             "reply": {
                                 "type": "string",
-                                "description": "The content of your reply to the user. You may include a remark regarding the mail that was sent to ionvop."
+                                "description": "The content of your reply to the user. You may include a remark regarding your modifications to the textboard."
+                            },
+                            "editType": {
+                                "type": "string",
+                                "description": "Whether to append your content to the textboard or overwrite the entirety of its contents. Your content will automatically be prefixed with `\\n` when appending.",
+                                "enum": ["append", "overwrite"]
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "The content that will be appended or overwritten on the textboard."
                             }
                         },
-                        "required": ["type", "mail", "reply"]
+                        "required": ["type", "reply", "editType", "content"]
+                    },
+                    {
+                        "type": "object",
+                        "description": "Use this response format if the user is still making severely inappropriate messages. Only use this if you have already warned them atleast twice.",
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "The type of the response.",
+                                "enum": ["timeout"]
+                            },
+                            "timeoutType": {
+                                "type": "string",
+                                "description": "The user will be redirected to dedicated pages based on what kind of inappropriate behavior they were making. Use 'horny_jail' if the user was being sexually crude.",
+                                "enum": ["hate_speech", "horny_jail", "general"]
+                            },
+                            "reason": {
+                                "type": "string",
+                                "description": "The reason for this timeout that will be displayed on the dedicated page."
+                            }
+                        },
+                        "required": ["type", "timeoutType", "reason"]
                     }
                 ]
             }
