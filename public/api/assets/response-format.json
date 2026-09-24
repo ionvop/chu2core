@@ -66,12 +66,16 @@
                                 "description": "The user will be redirected to dedicated pages based on what kind of inappropriate behavior they were making. Use 'horny_jail' if the user was being sexually crude.",
                                 "enum": ["hate_speech", "horny_jail", "general"]
                             },
+                            "reply": {
+                                "type": "string",
+                                "description": "Your final in-character message to the user. It is shown briefly in the chat before they are redirected to the timeout page."
+                            },
                             "reason": {
                                 "type": "string",
                                 "description": "Your last message to the user that will be displayed on the timeout page."
                             }
                         },
-                        "required": ["type", "timeoutType", "reason"]
+                        "required": ["type", "timeoutType", "reply", "reason"]
                     }
                 ]
             }
