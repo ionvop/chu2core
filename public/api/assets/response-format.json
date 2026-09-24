@@ -68,7 +68,7 @@
                             },
                             "reason": {
                                 "type": "string",
-                                "description": "The reason for this timeout that will be displayed on the dedicated page."
+                                "description": "Your last message to the user that will be displayed on the timeout page."
                             }
                         },
                         "required": ["type", "timeoutType", "reason"]
