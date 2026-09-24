@@ -4,6 +4,7 @@ import { Gif } from "@/components/Gif";
 import { WinCard, Control } from "@/components/WinCard";
 import { Chat } from "@/components/Chat";
 import { Textboard } from "@/components/Textboard";
+import { TextboardProvider } from "@/components/TextboardContext";
 import { SOCIALS, MARQUEE_ITEMS, GIFS } from "@/config/site";
 
 // emoji stand-ins for each platform's logo (tiny + no runtime cost)
@@ -112,59 +113,63 @@ export function Contact() {
         ))}
       </Marquee>
 
-      {/* ── chat assistant window ── */}
-      <section className="relative">
-        <Gif
-          src={GIFS[4].src}
-          alt={GIFS[4].alt}
-          width={88}
-          draggable
-          className="absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
-        />
-        <Gif
-          src={GIFS[5].src}
-          alt={GIFS[5].alt}
-          width={88}
-          draggable
-          className="absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
-        />
-        <WinCard
-          title="contact.exe"
-          icon={<span className="text-base leading-none">💬</span>}
-          controls={
-            <>
-              <Control glyph="–" label="Minimize" />
-              <Control glyph="□" label="Maximize" />
-              <Control glyph="✕" label="Close" />
-            </>
-          }
-          className="transition-transform hover:-translate-y-1"
-        >
-          <p className="mb-4 font-kawaii text-sm text-plum-muted">
-            my assistant CHU² will pass your message along ♡
-          </p>
-          <Chat />
-        </WinCard>
-      </section>
+      {/* ── chat assistant + global textboard ──
+          Both share one TextboardProvider so CHU²'s replies update the board. */}
+      <TextboardProvider>
+        {/* ── chat assistant window ── */}
+        <section className="relative">
+          <Gif
+            src={GIFS[4].src}
+            alt={GIFS[4].alt}
+            width={88}
+            draggable
+            className="absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
+          />
+          <Gif
+            src={GIFS[5].src}
+            alt={GIFS[5].alt}
+            width={88}
+            draggable
+            className="absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
+          />
+          <WinCard
+            title="contact.exe"
+            icon={<span className="text-base leading-none">💬</span>}
+            controls={
+              <>
+                <Control glyph="–" label="Minimize" />
+                <Control glyph="□" label="Maximize" />
+                <Control glyph="✕" label="Close" />
+              </>
+            }
+            className="transition-transform hover:-translate-y-1"
+          >
+            <p className="mb-4 font-kawaii text-sm text-plum-muted">
+              my assistant CHU² will pass your message along ♡
+            </p>
+            <Chat />
+          </WinCard>
+        </section>
 
-      {/* ── global textboard window ── */}
-      <section className="relative">
-        <Gif
-          src={GIFS[6].src}
-          alt={GIFS[6].alt}
-          width={88}
-          draggable
-          className="absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
-        />
-        <Gif
-          src={GIFS[7].src}
-          alt={GIFS[7].alt}
-          width={88}
-          draggable
-          className="absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
-        />
-        <Textboard />
-      </section>
+        {/* ── global textboard window ── */}
+        <section className="relative">
+          <Gif
+            src={GIFS[6].src}
+            alt={GIFS[6].alt}
+            width={88}
+            draggable
+            className="absolute -left-3 top-6 z-10 hidden animate-bob -rotate-6 sm:block"
+          />
+          <Gif
+            src={GIFS[7].src}
+            alt={GIFS[7].alt}
+            width={88}
+            draggable
+            className="absolute -right-3 top-6 z-10 hidden animate-float-slow rotate-6 sm:block"
+          />
+          <Textboard />
+        </section>
+      </TextboardProvider>
 
       {/* ── closing stamps ── */}
       <section className="-mt-2 flex justify-center">
