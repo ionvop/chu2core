@@ -114,11 +114,38 @@ Sends a user message to the model and returns the assistant's reply. If `key` is
 {
   "key": "session_abc123",
   "message": "The capital of France is Paris.",
-  "board": "Welcome to the global textboard!"
+  "board": "Welcome to the global textboard!",
+  "timeout": null
 }
 ```
 
-The `board` field is the current global textboard content. It is included on every reply so the frontend can stay in sync; the AI updates it whenever a user asks it to write to the board.
+| Field     | Type           | Description                                                                                     |
+|-----------|----------------|-------------------------------------------------------------------------------------------------|
+| `key`     | string         | The session key (new or existing).                                                              |
+| `message` | string         | The assistant's reply text to show in the chat.                                                 |
+| `board`   | string         | The current global textboard content, included on every reply so the frontend can stay in sync. |
+| `timeout` | object \| null | Present when the assistant times the user out; otherwise `null`. See below.                     |
+
+When the assistant issues a timeout, `timeout` is an object:
+
+```json
+{
+  "key": "session_abc123",
+  "message": "That's it — go think about what you've done!",
+  "board": "Welcome to the global textboard!",
+  "timeout": {
+    "timeoutType": "horny_jail",
+    "reason": "I warned you twice already. Stand in the corner!"
+  }
+}
+```
+
+| Field         | Type   | Description                                                                                          |
+|---------------|--------|------------------------------------------------------------------------------------------------------|
+| `timeoutType` | string | Which timeout page to show: `"hate_speech"`, `"horny_jail"`, or `"general"`.                          |
+| `reason`      | string | The assistant's scolding message, displayed on the timeout page.                                      |
+
+The assistant's structured reply is validated against `assets/response-format.json`, which defines the `reply`, `edit_board`, and `timeout` variants. The frontend should show `message` briefly, then redirect to the timeout page using `timeout.timeoutType` and `timeout.reason`.
 
 | Status | Condition                                                                 |
 |--------|---------------------------------------------------------------------------|
