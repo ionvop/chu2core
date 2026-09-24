@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import chu2Assistant from "@/assets/chu2-assistant.webp";
 import { JAIL_STORAGE_KEY } from "@/config/site";
+import { useTextboard } from "@/components/TextboardContext";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -39,6 +40,7 @@ export function Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { setBoard } = useTextboard();
 
   // Pre-fill the reply field with a message handed off from the home page
   // (`/contact?message=...`). We only pre-fill — never auto-send.
@@ -133,6 +135,12 @@ export function Chat() {
         ...prev,
         { role: "assistant", content: data.message },
       ]);
+
+      // CHU² may have written to the global textboard; the reply carries the
+      // current board content, so push it to the shared textboard state.
+      if (typeof data.board === "string") {
+        setBoard(data.board);
+      }
 
       // If CHU² timed the user out, let her parting message linger briefly,
       // then hand the directive off to the naughty corner and redirect.
