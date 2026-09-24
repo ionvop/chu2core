@@ -29,7 +29,7 @@ header("Content-Type: application/json");
 $data = json_decode(file_get_contents("php://input"), true);
 
 // The model used for chat completions via OpenRouter.
-$MODEL = "deepseek/deepseek-v4-flash-0731";
+$MODEL = "deepseek/deepseek-v4.1-flash";
 
 /**
  * Looks up a session id by its unique key.
