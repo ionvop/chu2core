@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
 import { WinCard, Control } from "@/components/WinCard";
-
-// Relative so it resolves under the current subdirectory (e.g. /home/api/board).
-const BOARD_API = "api/board";
+import { useTextboard } from "@/components/TextboardContext";
 
 /**
  * The global textboard, shown in its own Win95-style window.
@@ -10,34 +7,11 @@ const BOARD_API = "api/board";
  * Reads the single global text blob (`public/api/board`) shared by every
  * visitor. The board is written only by the AI (CHU²) acting as an
  * intermediary, so this window is read-only — it just displays whatever the
- * board currently holds.
+ * board currently holds. The content is owned by `TextboardProvider`, which
+ * `Chat` updates with the latest board returned on each reply.
  */
 export function Textboard() {
-  const [board, setBoard] = useState<string>("");
-  const [boardError, setBoardError] = useState<string | null>(null);
-
-  // Load the global textboard on mount.
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(BOARD_API)
-      .then((res) => {
-        if (!res.ok) throw new Error("Couldn't load the textboard.");
-        return res.json();
-      })
-      .then((data: { content?: string }) => {
-        if (!cancelled && typeof data.content === "string") {
-          setBoard(data.content);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setBoardError("textboard unavailable");
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { board, boardError } = useTextboard();
 
   return (
     <WinCard
