@@ -121,6 +121,30 @@ function loadHistory(int $sessionId): array {
 }
 
 /**
+ * Loads the structured response schema from `assets/response-format.json`.
+ *
+ * This file is the single source of truth for the shape CHU² must reply in
+ * (the `reply`, `edit_board`, and `timeout` variants). It is passed straight
+ * through to OpenRouter as the `json_schema` response format so the model and
+ * the parser below can never drift apart.
+ *
+ * @return array An associative array with 'name' (string) and 'schema' (array).
+ */
+function loadResponseSchema(): array {
+    $raw = file_get_contents("../assets/response-format.json");
+    $decoded = json_decode($raw, true);
+
+    if (!is_array($decoded) || !isset($decoded["schema"])) {
+        throw new RuntimeException("Invalid response-format.json.");
+    }
+
+    return [
+        "name" => $decoded["name"] ?? "response",
+        "schema" => $decoded["schema"]
+    ];
+}
+
+/**
  * Sends the conversation to OpenRouter and returns the assistant reply.
  *
  * @param array $history The full message history (system prompt already included).
@@ -128,6 +152,7 @@ function loadHistory(int $sessionId): array {
  */
 function askModel(array $history): array {
     global $OPENROUTER_API_KEY, $MODEL;
+    $format = loadResponseSchema();
     $response = fetch("https://openrouter.ai/api/v1/chat/completions", [
         "method" => "POST",
         "headers" => [
@@ -141,17 +166,9 @@ function askModel(array $history): array {
             "response_format" => [
                 "type" => "json_schema",
                 "json_schema" => [
-                    "name" => "chu2_reply",
+                    "name" => $format["name"],
                     "strict" => true,
-                    "schema" => [
-                        "type" => "object",
-                        "properties" => [
-                            "reply" => ["type" => "string"],
-                            "board" => ["type" => ["string", "null"]]
-                        ],
-                        "required" => ["reply", "board"],
-                        "additionalProperties" => false
-                    ]
+                    "schema" => $format["schema"]
                 ]
             ]
         ],
@@ -168,29 +185,67 @@ function askModel(array $history): array {
 }
 
 /**
- * Parses the assistant's reply to extract the chat text and an optional board
- * update. The model is instructed to reply as JSON:
+ * Parses the assistant's reply into the chat text, an optional board update,
+ * and an optional timeout directive. The model replies as JSON matching
+ * `assets/response-format.json`, i.e. a single `response` object with one of
+ * three variants:
  *
- *     { "reply": "...", "board": "<full new board text or null to leave unchanged>" }
+ *     { "response": { "type": "reply",       "reply": "..." } }
+ *     { "response": { "type": "edit_board",  "reply": "...", "editType": "append|overwrite", "content": "..." } }
+ *     { "response": { "type": "timeout",     "reply": "...", "timeoutType": "hate_speech|horny_jail|general", "reason": "..." } }
  *
- * If the reply is not valid JSON (or lacks a "reply" field), the whole reply is
- * treated as plain chat text and no board change is made.
+ * If the reply is not valid JSON (or lacks a recognised variant), the whole
+ * reply is treated as plain chat text and no board change or timeout is made.
  *
  * @param string $content The raw assistant reply.
- * @return array An associative array with 'reply' (string) and 'board'
- *               (string|null). 'board' is null when no board change is requested.
+ * @return array An associative array with:
+ *               - 'reply'   (string)      the chat text to show the user.
+ *               - 'board'   (string|null) the FULL new board content, or null
+ *                                         to leave the board unchanged.
+ *               - 'timeout' (array|null)  ['timeoutType' => string,
+ *                                         'reason' => string] when the user is
+ *                                         being timed out, otherwise null.
  */
-function parseBoardReply(string $content): array {
+function parseResponse(string $content): array {
     $decoded = json_decode($content, true);
+    $response = is_array($decoded) ? ($decoded["response"] ?? null) : null;
 
-    if (is_array($decoded) && isset($decoded["reply"]) && is_string($decoded["reply"])) {
-        $board = (isset($decoded["board"]) && is_string($decoded["board"]))
-            ? $decoded["board"]
-            : null;
-        return ["reply" => $decoded["reply"], "board" => $board];
+    if (!is_array($response) || !isset($response["type"])) {
+        return ["reply" => $content, "board" => null, "timeout" => null];
     }
 
-    return ["reply" => $content, "board" => null];
+    $reply = (isset($response["reply"]) && is_string($response["reply"]))
+        ? $response["reply"]
+        : "";
+
+    switch ($response["type"]) {
+        case "edit_board":
+            // Honor the requested edit mode: overwrite replaces the whole board,
+            // append adds the content on a new line (per the schema description).
+            $editType = $response["editType"] ?? "overwrite";
+            $newContent = (isset($response["content"]) && is_string($response["content"]))
+                ? $response["content"]
+                : "";
+            $board = ($editType === "append")
+                ? loadBoard() . "\n" . $newContent
+                : $newContent;
+            return ["reply" => $reply, "board" => $board, "timeout" => null];
+
+        case "timeout":
+            $timeoutType = $response["timeoutType"] ?? "general";
+            $reason = (isset($response["reason"]) && is_string($response["reason"]))
+                ? $response["reason"]
+                : "";
+            return [
+                "reply" => $reply,
+                "board" => null,
+                "timeout" => ["timeoutType" => $timeoutType, "reason" => $reason]
+            ];
+
+        case "reply":
+        default:
+            return ["reply" => $reply, "board" => null, "timeout" => null];
+    }
 }
 
 /**
@@ -290,9 +345,10 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 }
 
                 // The model may return a structured reply that also updates the
-                // global textboard. Parse it, apply any board change, and return
-                // the current board so the frontend can stay in sync.
-                $parsed = parseBoardReply($answer["content"]);
+                // global textboard or times the user out. Parse it, apply any
+                // board change, and return the current board so the frontend can
+                // stay in sync.
+                $parsed = parseResponse($answer["content"]);
                 if ($parsed["board"] !== null) {
                     saveBoard($parsed["board"]);
                 }
@@ -302,7 +358,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 echo json_encode([
                     "key" => $key,
                     "message" => $parsed["reply"],
-                    "board" => loadBoard()
+                    "board" => loadBoard(),
+                    "timeout" => $parsed["timeout"]
                 ]);
                 exit;
             case "PUT":
