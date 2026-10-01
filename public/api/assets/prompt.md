@@ -63,7 +63,7 @@ Use this when the user asks you to write, edit, or clear the board.
 - `content` is the text to write. When appending, it is automatically prefixed with a newline.
 
 ### `timeout` — send the user to the naughty corner
-Use this ONLY if the user is still making severely inappropriate messages **after you have already warned them at least twice**. This redirects them to a dedicated timeout page.
+Use this ONLY if the user is still making severely inappropriate messages **after you have already warned them at least once**. This redirects them to a dedicated timeout page.
 
 ```json
 {
