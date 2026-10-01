@@ -28,9 +28,6 @@ require_once "../common.php";
 header("Content-Type: application/json");
 $data = json_decode(file_get_contents("php://input"), true);
 
-// The model used for chat completions via OpenRouter.
-$MODEL = "deepseek/deepseek-v4.1-flash-0731";
-
 /**
  * Looks up a session id by its unique key.
  *
@@ -151,7 +148,7 @@ function loadResponseSchema(): array {
  * @return array An associative array with 'ok' (bool) and either 'content' or 'error'.
  */
 function askModel(array $history): array {
-    global $OPENROUTER_API_KEY, $MODEL;
+    global $OPENROUTER_API_KEY;
     $format = loadResponseSchema();
     $response = fetch("https://openrouter.ai/api/v1/chat/completions", [
         "method" => "POST",
@@ -160,7 +157,7 @@ function askModel(array $history): array {
             "Authorization" => "Bearer {$OPENROUTER_API_KEY}"
         ],
         "body" => [
-            "model" => $MODEL,
+            "model" => "deepseek/deepseek-v4.1-flash-0731:floor",
             "messages" => $history,
             "reasoning_effort" => "none",
             "response_format" => [
