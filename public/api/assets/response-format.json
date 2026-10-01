@@ -53,7 +53,7 @@
                     },
                     {
                         "type": "object",
-                        "description": "Use this response format if the user is still making severely inappropriate messages. Only use this if you have already warned them atleast twice.",
+                        "description": "Use this response format if the user is still making severely inappropriate messages. Only use this if you have already warned them atleast once.",
                         "additionalProperties": false,
                         "properties": {
                             "type": {
