@@ -10,9 +10,44 @@ import {
   MARQUEE_ITEMS,
   ABOUT_TITLES,
   ABOUT_BIO,
+  ABOUT_STACK,
   ABOUT_LAST_UPDATED,
   GIFS,
+  type AboutLink,
 } from "@/config/site";
+
+/** Renders a string, turning any configured link text into an anchor. */
+function InlineText({ text, links }: { text: string; links?: AboutLink[] }) {
+  if (!links || links.length === 0) return <>{text}</>;
+
+  const pattern = new RegExp(
+    `(${links
+      .map((link) => link.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|")})`,
+    "g",
+  );
+
+  return (
+    <>
+      {text.split(pattern).map((part, i) => {
+        const link = links.find((candidate) => candidate.text === part);
+        return link ? (
+          <a
+            key={i}
+            href={link.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-rose-deep underline decoration-dotted underline-offset-2 hover:text-flamingo"
+          >
+            {part}
+          </a>
+        ) : (
+          <span key={i}>{part}</span>
+        );
+      })}
+    </>
+  );
+}
 
 export function About() {
   return (
@@ -83,13 +118,32 @@ export function About() {
               <p className="font-pixel text-2xl text-rose-deep pixel-shadow">
                 {SITE.name}
               </p>
-              <ul className="flex flex-col items-center gap-1 text-center">
-                {ABOUT_TITLES.map((title) => (
-                  <li
-                    key={title}
-                    className="font-kawaii text-sm text-plum-muted"
-                  >
-                    {title}
+              <ul className="flex flex-col items-center gap-3 text-center">
+                {ABOUT_TITLES.map((title, index) => (
+                  <li key={`${title.award}-${index}`} className="flex flex-col gap-0.5">
+                    {title.institution && (
+                      <span className="font-kawaii text-xs text-plum-muted">
+                        {title.institution}
+                      </span>
+                    )}
+                    {title.event && (
+                      <span className="font-kawaii text-xs text-plum-muted">
+                        {title.event}
+                      </span>
+                    )}
+                    {title.category && (
+                      <span className="font-kawaii text-xs text-plum">
+                        {title.category}
+                      </span>
+                    )}
+                    <span className="font-kawaii text-sm font-bold text-flamingo-deep">
+                      ✦ {title.award}
+                    </span>
+                    {title.note && (
+                      <span className="font-kawaii text-xs text-plum-muted">
+                        <InlineText text={title.note} links={title.links} />
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -109,13 +163,9 @@ export function About() {
               <p className="mb-6 font-kawaii text-xs text-plum-muted">
                 last updated: {ABOUT_LAST_UPDATED}
               </p>
-              <div className="flex flex-col gap-4">
-                {ABOUT_BIO.map((para) => (
-                  <p key={para} className="font-kawaii leading-relaxed text-plum">
-                    {para}
-                  </p>
-                ))}
-              </div>
+              <p className="font-kawaii leading-relaxed text-plum">
+                {ABOUT_BIO}
+              </p>
             </div>
           </div>
         </WinCard>
@@ -133,6 +183,41 @@ export function About() {
           </span>
         ))}
       </Marquee>
+
+      {/* ── tech stack windows ── */}
+      <section className="relative">
+        <Gif
+          src={GIFS[6].src}
+          alt={GIFS[6].alt}
+          width={88}
+          draggable
+          className="absolute -left-3 top-0 z-10 hidden animate-bob -rotate-6 sm:block"
+        />
+        <Gif
+          src={GIFS[7].src}
+          alt={GIFS[7].alt}
+          width={88}
+          draggable
+          className="absolute -right-3 top-0 z-10 hidden animate-float-slow rotate-6 sm:block"
+        />
+        <h2 className="mb-5 text-center font-pixel text-3xl text-rose-deep pixel-shadow">
+          my toolbox ✧
+        </h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {ABOUT_STACK.map((card) => (
+            <WinCard
+              key={card.title}
+              title={card.title}
+              icon={<span className="text-base leading-none">{card.icon}</span>}
+              className="transition-transform hover:-translate-y-1"
+            >
+              <p className="font-kawaii leading-relaxed text-plum">
+                <InlineText text={card.body} links={card.links} />
+              </p>
+            </WinCard>
+          ))}
+        </div>
+      </section>
 
       {/* ── my waifu window ── */}
       <section className="relative">
@@ -170,8 +255,8 @@ export function About() {
       {/* ── closing stamps ── */}
       <section className="-mt-2 flex justify-center">
         <Gif
-          src={GIFS[6].src}
-          alt={GIFS[6].alt}
+          src={GIFS[8].src}
+          alt={GIFS[8].alt}
           width={88}
           draggable
           className="absolute -right-2 -top-4 z-10 hidden animate-bob rotate-3 sm:block"
