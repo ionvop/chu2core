@@ -157,7 +157,7 @@ function askModel(array $history): array {
             "Authorization" => "Bearer {$OPENROUTER_API_KEY}"
         ],
         "body" => [
-            "model" => "deepseek/deepseek-v4.1-flash-0731:floor",
+            "model" => "deepseek/deepseek-v4.1-flash:floor",
             "messages" => $history,
             "reasoning_effort" => "none",
             "response_format" => [
