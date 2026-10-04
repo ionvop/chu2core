@@ -7,13 +7,6 @@ import { Textboard } from "@/components/Textboard";
 import { TextboardProvider } from "@/components/TextboardContext";
 import { SOCIALS, MARQUEE_ITEMS, GIFS } from "@/config/site";
 
-// emoji stand-ins for each platform's logo (tiny + no runtime cost)
-const socialIconMap: Record<string, string> = {
-  discord: "💬",
-  github: "🐙",
-  youtube: "▶",
-};
-
 export function Contact() {
   return (
     <div className="relative flex flex-col gap-12">
@@ -85,11 +78,14 @@ export function Contact() {
                 aria-label={`${social.label}: ${social.handle}`}
                 className="group flex flex-col items-center gap-2"
               >
-                <span
-                  className="win-outset grid h-16 w-16 place-items-center rounded-full text-2xl leading-none transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: social.color }}
-                >
-                  {socialIconMap[social.key]}
+                <span className="win-outset grid h-16 w-16 place-items-center rounded-full bg-cream transition-transform group-hover:scale-110">
+                  <img
+                    src={social.icon}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 select-none"
+                  />
                 </span>
                 <span className="font-kawaii text-xs text-plum-muted">
                   {social.handle}
