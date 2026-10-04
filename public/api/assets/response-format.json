@@ -63,8 +63,8 @@
                             },
                             "timeoutType": {
                                 "type": "string",
-                                "description": "The user will be redirected to dedicated pages based on what kind of inappropriate behavior they were making. Use 'horny_jail' if the user was being sexually crude.",
-                                "enum": ["hate_speech", "horny_jail", "general"]
+                                "description": "The user will be redirected to dedicated pages based on what kind of inappropriate behavior they were making. Use 'horny_jail' if the user was being sexually crude. Use 'spam' if the user has sent incoherent or meaningless messages three times in a row.",
+                                "enum": ["hate_speech", "horny_jail", "spam", "general"]
                             },
                             "reply": {
                                 "type": "string",
