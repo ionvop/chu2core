@@ -34,6 +34,7 @@ import iconYoutube from "@/assets/icons/youtube.svg";
 import jailGeneral from "@/assets/gifs/jail/general.gif";
 import jailHateSpeech from "@/assets/gifs/jail/hate-speech.gif";
 import jailHorny from "@/assets/gifs/jail/horny-jail.gif";
+import jailSpam from "@/assets/gifs/jail/spam.gif";
 
 export const SITE = {
   name: "ionvop",
@@ -203,7 +204,7 @@ export const COPYRIGHT_YEAR = new Date().getFullYear();
 /** sessionStorage key the chat uses to hand the timeout directive to /jail. */
 export const JAIL_STORAGE_KEY = "ionvop.jail";
 
-export type TimeoutType = "hate_speech" | "horny_jail" | "general";
+export type TimeoutType = "hate_speech" | "horny_jail" | "spam" | "general";
 
 export interface JailType {
   /** headline shown under the window title */
@@ -236,6 +237,14 @@ export const JAIL_TYPES: Record<TimeoutType, JailType> = {
     gif: jailHateSpeech,
     gifAlt: "CHU² glaring at you for hateful behavior",
     seconds: 60,
+  },
+  spam: {
+    headline: "spam detected!",
+    subtext: "three nonsense messages in a row? seriously? ♡",
+    accent: "#e8734a",
+    gif: jailSpam,
+    gifAlt: "CHU² fed up with your spam",
+    seconds: 30,
   },
   general: {
     headline: "naughty corner!",
