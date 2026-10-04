@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import chu2Assistant from "@/assets/chu2-assistant.webp";
-import { JAIL_STORAGE_KEY } from "@/config/site";
+import {
+  CHAT_LOCK_COPY,
+  CHAT_LOCK_STORAGE_KEY,
+  JAIL_STORAGE_KEY,
+} from "@/config/site";
 import { useTextboard } from "@/components/TextboardContext";
 
 interface ChatMessage {
@@ -36,6 +40,11 @@ export function Chat() {
   );
   const [error, setError] = useState<string | null>(null);
   const [confirmingNew, setConfirmingNew] = useState(false);
+  // Once CHU² times the user out the composer stays locked — even after the
+  // /jail redirect and a browser restart — until a new conversation begins.
+  const [locked, setLocked] = useState<boolean>(
+    () => localStorage.getItem(CHAT_LOCK_STORAGE_KEY) === "1"
+  );
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
@@ -43,8 +52,10 @@ export function Chat() {
   const { setBoard } = useTextboard();
 
   // Pre-fill the reply field with a message handed off from the home page
-  // (`/contact?message=...`). We only pre-fill — never auto-send.
+  // (`/contact?message=...`). We only pre-fill — never auto-send. Skipped while
+  // locked, since the composer is unreachable anyway.
   useEffect(() => {
+    if (locked) return;
     const draft = searchParams.get("message");
     if (draft) setInput(draft);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,7 +98,8 @@ export function Chat() {
   /**
    * Starts a brand-new conversation. The API creates a fresh session whenever
    * `key` is omitted on send, so we only need to clear local state + the stored
-   * key here — the next message will begin a new session server-side.
+   * key here — the next message will begin a new session server-side. This is
+   * also the only way to lift a post-timeout lock.
    */
   function startNewConversation() {
     if (loading) return;
@@ -99,12 +111,14 @@ export function Chat() {
     setSessionKey(null);
     setError(null);
     setConfirmingNew(false);
+    setLocked(false);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(CHAT_LOCK_STORAGE_KEY);
   }
 
   async function send() {
     const content = input.trim();
-    if (content === "" || loading) return;
+    if (content === "" || loading || locked) return;
 
     setMessages((prev) => [...prev, { role: "user", content }]);
     setInput("");
@@ -143,10 +157,13 @@ export function Chat() {
       }
 
       // If CHU² timed the user out, let her parting message linger briefly,
-      // then hand the directive off to the naughty corner and redirect.
+      // then hand the directive off to the naughty corner and redirect. The
+      // lock is persisted so the composer is still sealed when they come back.
       const timeout: TimeoutDirective | null = data.timeout ?? null;
       if (timeout) {
         sessionStorage.setItem(JAIL_STORAGE_KEY, JSON.stringify(timeout));
+        localStorage.setItem(CHAT_LOCK_STORAGE_KEY, "1");
+        setLocked(true);
         window.setTimeout(() => navigate("/jail"), JAIL_REDIRECT_DELAY);
       }
     } catch (err) {
@@ -248,27 +265,63 @@ export function Chat() {
       )}
 
       {/* ── composer ── */}
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") send();
-          }}
-          placeholder="write a reply..."
-          aria-label="Write a message to CHU²"
-          className="win-input min-w-0 flex-1 text-sm"
-          disabled={loading}
-        />
-        <button
-          type="button"
-          onClick={send}
-          disabled={input.trim() === "" || loading}
-          className="win-button font-kawaii text-sm font-bold"
-        >
-          ✉ send
-        </button>
+      <div className={`relative ${locked ? "min-h-[8.5rem]" : ""}`}>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") send();
+            }}
+            placeholder="write a reply..."
+            aria-label="Write a message to CHU²"
+            className="win-input min-w-0 flex-1 text-sm"
+            disabled={loading || locked}
+          />
+          <button
+            type="button"
+            onClick={send}
+            disabled={input.trim() === "" || loading || locked}
+            className="win-button font-kawaii text-sm font-bold"
+          >
+            ✉ send
+          </button>
+        </div>
+
+        {/* ── lock overlay ──
+            CHU² sealed the composer after a timeout. The message log above
+            stays readable; the only way forward is a new conversation. */}
+        {locked && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="win-lock-overlay absolute inset-0 z-10 flex flex-col items-center justify-center gap-1 rounded-[2px] px-3 text-center"
+          >
+            <span
+              className="animate-lock text-3xl leading-none"
+              aria-hidden="true"
+            >
+              🔒
+            </span>
+            <p className="font-pixel text-sm tracking-wide text-flamingo-deep">
+              {CHAT_LOCK_COPY.headline}
+            </p>
+            <p className="font-kawaii text-xs text-plum-muted">
+              {CHAT_LOCK_COPY.subtext}
+            </p>
+            <button
+              type="button"
+              onClick={startNewConversation}
+              className="win-button font-kawaii mt-1 text-xs font-bold text-flamingo-deep"
+            >
+              {confirmingNew ? "sure? ♡" : CHAT_LOCK_COPY.cta}
+            </button>
+            <p className="font-kawaii text-[10px] text-plum-muted">
+              {CHAT_LOCK_COPY.hint}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
