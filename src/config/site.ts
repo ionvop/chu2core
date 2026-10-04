@@ -268,3 +268,21 @@ export const JAIL_MARQUEE_ITEMS = [
   "★ this corner is for reflecting ★",
   "✖ behave yourself next time ✖",
 ] as const;
+
+/* ── chat lock (post-timeout) ─────────────────────────────────────────
+ * Once CHU² times a user out, the chat composer is locked behind a 🔒
+ * overlay. The lock outlives the /jail redirect (and a browser restart), so
+ * it lives in localStorage alongside the session key, and only starting a
+ * new conversation clears it.
+ */
+
+/** localStorage key holding the "CHU² locked this chat" flag. */
+export const CHAT_LOCK_STORAGE_KEY = "ionvop.chat.locked";
+
+/** Copy shown on the locked composer overlay. */
+export const CHAT_LOCK_COPY = {
+  headline: "chat locked!",
+  subtext: "CHU² locked this conversation. no more messages here, sorry. ♡",
+  hint: "the only way out is a fresh start...",
+  cta: "✦ start a new conversation",
+} as const;
