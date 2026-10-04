@@ -142,7 +142,7 @@ When the assistant issues a timeout, `timeout` is an object:
 
 | Field         | Type   | Description                                                                                          |
 |---------------|--------|------------------------------------------------------------------------------------------------------|
-| `timeoutType` | string | Which timeout page to show: `"hate_speech"`, `"horny_jail"`, or `"general"`.                          |
+| `timeoutType` | string | Which timeout page to show: `"hate_speech"`, `"horny_jail"`, `"spam"`, or `"general"`.                    |
 | `reason`      | string | The assistant's scolding message, displayed on the timeout page.                                      |
 
 The assistant's structured reply is validated against `assets/response-format.json`, which defines the `reply`, `edit_board`, and `timeout` variants. The frontend should show `message` briefly, then redirect to the timeout page using `timeout.timeoutType` and `timeout.reason`.
