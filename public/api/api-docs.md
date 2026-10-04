@@ -147,6 +147,8 @@ When the assistant issues a timeout, `timeout` is an object:
 
 The assistant's structured reply is validated against `assets/response-format.json`, which defines the `reply`, `edit_board`, and `timeout` variants. The frontend should show `message` briefly, then redirect to the timeout page using `timeout.timeoutType` and `timeout.reason`.
 
+A timeout also **locks the chat composer** on the frontend: the text input and send button are sealed behind a 🔒 overlay, and the only remaining action is starting a new conversation. The lock is persisted client-side (in `localStorage`, alongside the session key) so it survives the redirect to the timeout page and a browser restart, and it is cleared only when a new conversation begins. This is a UI-level lock — the API itself keeps accepting messages for the session.
+
 | Status | Condition                                                                 |
 |--------|---------------------------------------------------------------------------|
 | `400`  | `content` field is missing or empty.                                     |
