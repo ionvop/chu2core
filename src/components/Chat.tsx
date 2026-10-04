@@ -11,7 +11,7 @@ interface ChatMessage {
 
 /** The timeout directive CHU² can attach to a reply. */
 interface TimeoutDirective {
-  timeoutType: "hate_speech" | "horny_jail" | "general";
+  timeoutType: "hate_speech" | "horny_jail" | "spam" | "general";
   reason: string;
 }
 
