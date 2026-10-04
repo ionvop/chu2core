@@ -27,6 +27,10 @@ import gif8 from "@/assets/gifs/chu2-8.gif";
 import gif9 from "@/assets/gifs/chu2-9.gif";
 import gif10 from "@/assets/gifs/chu2-10.gif";
 
+import iconDiscord from "@/assets/icons/discord.svg";
+import iconGithub from "@/assets/icons/github.svg";
+import iconYoutube from "@/assets/icons/youtube.svg";
+
 import jailGeneral from "@/assets/gifs/jail/general.gif";
 import jailHateSpeech from "@/assets/gifs/jail/hate-speech.gif";
 import jailHorny from "@/assets/gifs/jail/horny-jail.gif";
@@ -49,6 +53,7 @@ export interface Social {
   handle: string;
   url: string;
   color: string;
+  icon: string;
 }
 
 export const SOCIALS: Social[] = [
@@ -58,6 +63,7 @@ export const SOCIALS: Social[] = [
     handle: "ionvop",
     url: "https://discord.com/users/301203021608779776",
     color: "#ff9ec4",
+    icon: iconDiscord,
   },
   {
     key: "github",
@@ -65,6 +71,7 @@ export const SOCIALS: Social[] = [
     handle: "ionvop",
     url: "https://github.com/ionvop",
     color: "#d45d79",
+    icon: iconGithub,
   },
   {
     key: "youtube",
@@ -72,6 +79,7 @@ export const SOCIALS: Social[] = [
     handle: "Ionvop YT",
     url: "https://www.youtube.com/channel/UCXDfWc9wKYat9KmgRRMqaDg",
     color: "#ff5a4e",
+    icon: iconYoutube,
   },
 ];
 
