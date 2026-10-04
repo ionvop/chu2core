@@ -142,21 +142,104 @@ export const CHARACTERS = {
   live: liveChar,
 };
 
-export const ABOUT_LAST_UPDATED = "2024-12-04";
+export const ABOUT_LAST_UPDATED = "2026-09-26";
 
-export const ABOUT_TITLES = [
-  "2024 ACM Programming Competition Champion",
-  "TETR.IO Season 1 U Rank Player",
-  "TETR.IO Season 2 U Rank Player",
-  "the plap guy",
-] as const;
+/** An inline link inside a body/note string, matched by its `text`. */
+export interface AboutLink {
+  text: string;
+  url: string;
+}
 
-export const ABOUT_BIO = [
-  "I'm currently a 3rd year college student studying Bachelor of Science in Computer Science, and my interests include web development, software development, and game development.",
-  "The programming languages I'm familiar with are VBScript for automations, HTML, CSS, JavaScript, and PHP for web development, C# for GUI applications, Java for legacy applications and self-torture, Python for machine-learning, Brainf*ck for fun, Lua for game modding, GLSL for post-processing effects, Turbowarp (Scratch) for game development, and ivpy which is a custom programming language that I made for fun.",
-  "I like to play rhythm games and fast-paced Tetris games. My favorite rhythm games include osu!, mobile games such as Arcaea, Rotaeno, BanG Dream, and arcade rhythm games such as maimai, SDVX, and PIU. My favorite fast-paced Tetris games include TETR.IO and Jstris.",
-  "I'm also learning music production and my favorite genre to listen to is dubstep. My favorite artists include ReeK, Eliminate, and Similar Outskirts. I won't list down the JP artists because there's too many of them. The DAW software I used to use was Caustic 3 but I've since switched to Waveform 11.",
-] as const;
+export interface AboutTitle {
+  institution?: string;
+  event?: string;
+  category?: string;
+  award: string;
+  /** optional trailing sentence, e.g. explaining an in-joke title */
+  note?: string;
+  links?: AboutLink[];
+}
+
+export const ABOUT_TITLES: AboutTitle[] = [
+  {
+    institution: "Mapua Malayan Colleges Mindanao",
+    event: "Mindanao-Wide IT Olympiad 2024",
+    category: "ACM Programming Competition",
+    award: "Champion",
+  },
+  {
+    institution: "UM Tagum College",
+    event: "Festival of Talents 2025",
+    category: "Tetris Battle",
+    award: "Champion",
+  },
+  {
+    institution: "UM Tagum College",
+    event: "CSIT Academic Festival 2025",
+    category: "Software Engineering Project Presentation",
+    award: "Best Presenter",
+  },
+  {
+    event: "TETR.IO Season 1",
+    award: "U Rank Player",
+  },
+  {
+    award: "the plap guy",
+    note: 'some context on "the plap guy" title.',
+    links: [
+      {
+        text: "context",
+        url: "https://www.youtube.com/watch?v=h0OTWNkLP8s&t=257s",
+      },
+    ],
+  },
+];
+
+export const ABOUT_BIO =
+  "I'm a Bachelor of Science in Computer Science graduate from UM Tagum College and my interests include web, software, and game development.";
+
+export interface AboutStackCard {
+  /** window title, e.g. "languages.exe" */
+  title: string;
+  /** emoji glyph shown in the title bar */
+  icon: string;
+  body: string;
+  links?: AboutLink[];
+}
+
+export const ABOUT_STACK: AboutStackCard[] = [
+  {
+    title: "languages.exe",
+    icon: "💻",
+    body: "The programming languages I'm familiar with are HTML, CSS, JavaScript, TypeScript, and PHP for web development, and Python or C# for GUI applications. Other languages include VBScript for automations, BrainF for challenges and self-torture, and ivpy which is a custom programming language that I made for fun.",
+    links: [{ text: "ivpy", url: "https://github.com/ionvop/ivpy/" }],
+  },
+  {
+    title: "frameworks.exe",
+    icon: "🧩",
+    body: "The framework that I mainly work with is Laravel for building websites and applications, but other frameworks I work with include FastAPI mainly for deploying Huggingface API demos, Flutter for mobile app development, and SvelteKit to supposedly work with AstroDX but college got in the way of that area.",
+  },
+  {
+    title: "frontend.exe",
+    icon: "🎨",
+    body: "The frontend development tools that I mainly use are either Laravel Blade or React depending on the project, and additional tools include Tailwind CSS for styling, Daisy UI for components, and Vite for building assets.",
+  },
+  {
+    title: "databases.exe",
+    icon: "🗄",
+    body: "I mainly work with relational databases with my personal favorite being SQLite3 for the serverless simplicity, but I also have experience with other databases such as MySQL for building websites with XAMPP, and PostgreSQL for building apps that prioritizes performance.",
+  },
+  {
+    title: "game-dev.exe",
+    icon: "🕹",
+    body: "The game engine that I'm most familiar with is Turbowarp or Scratch since those are actually what got me into programming in the first place, but nowadays I use Godot for general game development, and Ren'Py for developing visual novels.",
+  },
+  {
+    title: "games.exe",
+    icon: "🎮",
+    body: "I also like to play rhythm games such as Arcaea, maimai and BanG Dream!, and fast-paced Tetris games such as TETR.IO and Jstris. My main games nowadays are Strinova and Neverness to Everness.",
+  },
+];
 
 export const STAMPS = [
   { src: stampBeGoodForSanta, alt: "be good for santa" },
